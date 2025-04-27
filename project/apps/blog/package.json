@@ -1,5 +1,5 @@
 {
-  "name": "@project/post",
+  "name": "@project/blog",
   "version": "0.0.1",
   "private": true,
   "nx": {
@@ -27,15 +27,15 @@
           "build"
         ],
         "options": {
-          "buildTarget": "@project/post:build",
+          "buildTarget": "@project/blog:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "@project/post:build:development"
+            "buildTarget": "@project/blog:build:development"
           },
           "production": {
-            "buildTarget": "@project/post:build:production"
+            "buildTarget": "@project/blog:build:production"
           }
         }
       }
