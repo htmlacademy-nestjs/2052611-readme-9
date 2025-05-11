@@ -1,0 +1,1 @@
+export const TAG_EXISTS = 'Tag with this name already exists';
