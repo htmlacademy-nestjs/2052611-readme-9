@@ -1,0 +1,1 @@
+export const POST_TYPE_EXISTS = 'Post type with this name already exists';

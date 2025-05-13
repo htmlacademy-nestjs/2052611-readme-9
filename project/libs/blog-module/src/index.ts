@@ -1,0 +1,1 @@
+export { BlogPostModule } from './lib/post/post.module';

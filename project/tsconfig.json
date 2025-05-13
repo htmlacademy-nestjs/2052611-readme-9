@@ -2,6 +2,9 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
+  "compilerOptions": {
+    "isolatedModules": false
+  },
   "references": [
     {
       "path": "./apps/user"
@@ -14,6 +17,15 @@
     },
     {
       "path": "./apps/blog"
+    },
+    {
+      "path": "./libs/shared"
+    },
+    {
+      "path": "./libs/blog-module"
+    },
+    {
+      "path": "./libs/user-module"
     }
   ]
 }

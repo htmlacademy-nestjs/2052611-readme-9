@@ -3,9 +3,10 @@
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
+    "experimentalDecorators": true,
     "importHelpers": true,
-    "isolatedModules": true,
-    "lib": ["es2022"],
+    "isolatedModules": false,
+    "lib": ["es2022", "DOM"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
@@ -14,8 +15,16 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
+    "sourceMap": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["development"]
-  }
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@project/blog-module": ["libs/blog-module/src/index.ts"],
+      "@project/shared": ["libs/shared/src/index.ts"],
+      "@project/user-module": ["libs/user-module/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules"]
 }
