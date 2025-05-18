@@ -17,7 +17,7 @@ export class LikeService {
 		}
 		const existLike = await this.repository.findByPostAndUser(postUuid, userUuid);
 		if (existLike) {
-			this.repository.deleteById(existLike.postUuid);
+			this.repository.deleteById(existLike.uuid);
 		} else {
 			const newEntity = new LikeEntity(like);
 			this.repository.save(newEntity);
@@ -25,7 +25,7 @@ export class LikeService {
 	}
 
 	public async deleteByPost(postUuid: string) {
-		const likes = this.repository.findByPost(postUuid);
+		const likes = await this.repository.findByPost(postUuid);
 		(await likes).forEach(item => this.repository.deleteById(item.uuid));
 	}
 }
