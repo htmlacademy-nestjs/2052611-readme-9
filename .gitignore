@@ -11,3 +11,5 @@ coverage
 *.log
 
 *.env
+
+project/apps/user/mongo-data/*

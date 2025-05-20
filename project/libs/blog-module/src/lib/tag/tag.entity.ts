@@ -6,13 +6,13 @@ export class TagEntity extends Entity implements StorableEntity<Tag> {
 
 	constructor(tag: Tag) {
 		super();
-		this.uuid = tag.uuid ?? '';
+		this.id = tag.id ?? '';
 		this.name = tag.name;
 	}
 
 	public toPOJO(): Tag {
 		return {
-			uuid: this.uuid,
+			id: this.id,
 			name: this.name
 		}
 	}

@@ -10,22 +10,22 @@ export class LikeService {
 	) { }
 
 	public async addOrRemoveLike(dto: CreateLikeDto) {
-		const { postUuid, userUuid } = dto;
+		const { postId, userId } = dto;
 		const like = {
-			postUuid,
-			userUuid
+			postId,
+			userId
 		}
-		const existLike = await this.repository.findByPostAndUser(postUuid, userUuid);
+		const existLike = await this.repository.findByPostAndUser(postId, userId);
 		if (existLike) {
-			this.repository.deleteById(existLike.uuid);
+			this.repository.deleteById(existLike.id);
 		} else {
 			const newEntity = new LikeEntity(like);
 			this.repository.save(newEntity);
 		}
 	}
 
-	public async deleteByPost(postUuid: string) {
-		const likes = await this.repository.findByPost(postUuid);
-		(await likes).forEach(item => this.repository.deleteById(item.uuid));
+	public async deleteByPost(postId: string) {
+		const likes = await this.repository.findByPost(postId);
+		(await likes).forEach(item => this.repository.deleteById(item.id));
 	}
 }

@@ -15,13 +15,13 @@ export class BlogPostController {
 		return newPost.toPOJO();
 	}
 
-	@Delete(':uuid')
-	public async delete(@Param('uuid') id: string) {
+	@Delete(':id')
+	public async delete(@Param('id') id: string) {
 		this.service.delete(id);
 	}
 
-	@Post(':uuid/repost')
-	public async repost(@Param('uuid') id: string) {
+	@Post(':id/repost')
+	public async repost(@Param('id') id: string) {
 		this.service.repost(id);
 	}
 

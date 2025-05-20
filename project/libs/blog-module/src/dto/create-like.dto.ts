@@ -1,4 +1,4 @@
 export class CreateLikeDto {
-	public postUuid: string;
-	public userUuid: string;
+	public postId: string;
+	public userId: string;
 }

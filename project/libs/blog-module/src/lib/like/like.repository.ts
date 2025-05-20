@@ -10,14 +10,14 @@ export class LikeRepository extends BaseMemoryRepository<LikeEntity> {
 		super(entityFactory);
 	}
 
-	public async findByPost(postUuid: string): Promise<Like[]> {
+	public async findByPost(postId: string): Promise<Like[]> {
 		const entities = Array.from(this.entities.values());
-		return entities.filter((entity) => entity.postUuid === postUuid);
+		return entities.filter((entity) => entity.postId === postId);
 	}
 
-	public async findByPostAndUser(postUuid: string, userUuid: string): Promise<LikeEntity | null> {
+	public async findByPostAndUser(postId: string, userId: string): Promise<LikeEntity | null> {
 		const entities = Array.from(this.entities.values());
-		const like = entities.find((entity) => entity.postUuid === postUuid && entity.userUuid === userUuid);
+		const like = entities.find((entity) => entity.postId === postId && entity.userId === userId);
 
 		if (!like) {
 			return null;

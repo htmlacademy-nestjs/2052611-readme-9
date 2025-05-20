@@ -7,11 +7,11 @@ export class LikeController {
 		private readonly service: LikeService
 	) { }
 
-	@Post('post/:uuid/like')
-	public async like(@Param('uuid') id: string, @Query('userUuid') userUuid: string) {
+	@Post('post/:id/like')
+	public async like(@Param('id') id: string, @Query('userId') userId: string) {
 		const like = {
-			postUuid: id,
-			userUuid: userUuid
+			postId: id,
+			userId: userId
 		}
 		await this.service.addOrRemoveLike(like);
 	}

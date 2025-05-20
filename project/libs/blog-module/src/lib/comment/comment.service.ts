@@ -10,10 +10,10 @@ export class CommentService {
 	) { }
 
 	public async create(dto: CreateCommentDto): Promise<CommentEntity> {
-		const { postUuid, userUuid, text } = dto;
+		const { postId, userId, text } = dto;
 		const comment = {
-			postUuid,
-			userUuid,
+			postId,
+			userId,
 			text,
 			creationDate: new Date()
 		};
@@ -22,12 +22,12 @@ export class CommentService {
 		return newEntity;
 	}
 
-	public async delete(uuid: string) {
-		this.repository.deleteById(uuid);
+	public async delete(id: string) {
+		this.repository.deleteById(id);
 	}
 
-	public async deleteByPost(postUuid: string) {
-		const comments = this.repository.findAllByPost(postUuid);
-		(await comments).forEach(item => this.repository.deleteById(item.uuid));
+	public async deleteByPost(postId: string) {
+		const comments = this.repository.findAllByPost(postId);
+		(await comments).forEach(item => this.repository.deleteById(item.id));
 	}
 }

@@ -10,10 +10,10 @@ export class BlogPostService {
 	) { }
 
 	public async create(@Body() dto: CreatePostDto): Promise<BlogPostEntity> {
-		const { typeUuid, userUuid, creationDate, publicationDate, tags, data, isPublished } = dto;
+		const { typeId, userId, creationDate, publicationDate, tags, data, isPublished } = dto;
 		const post = {
-			typeUuid,
-			userUuid,
+			typeId,
+			userId,
 			creationDate,
 			publicationDate,
 			tags,
@@ -25,17 +25,17 @@ export class BlogPostService {
 		return newEntity;
 	}
 
-	public async delete(uuid: string) {
-		const existPost = await this.repository.findById(uuid);
+	public async delete(id: string) {
+		const existPost = await this.repository.findById(id);
 		if (existPost) {
-			/*CommentService.deleteByPost(uuid);
-			LikeService.deleteByPost(uuid);*/
-			this.repository.deleteById(uuid);
+			/*CommentService.deleteByPost(id);
+			LikeService.deleteByPost(id);*/
+			this.repository.deleteById(id);
 		}
 	}
 
-	public async repost(uuid: string) {
-		const existPost = this.repository.findById(uuid);
+	public async repost(id: string) {
+		const existPost = this.repository.findById(id);
 		if (existPost !== null) {
 
 		}
