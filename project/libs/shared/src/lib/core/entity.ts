@@ -1,11 +1,11 @@
 export abstract class Entity {
-	private _uuid = '';
+	private _id = '';
 
-	public get uuid(): string {
-		return this._uuid;
+	public get id(): string {
+		return this._id;
 	}
 
-	public set uuid(value: string) {
-		this._uuid = value;
+	public set id(value: string) {
+		this._id = value;
 	}
 }

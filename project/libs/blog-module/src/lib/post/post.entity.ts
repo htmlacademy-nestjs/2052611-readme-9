@@ -2,8 +2,8 @@ import { BlogPost } from "./post.interface";
 import { Entity, StorableEntity } from '@project/shared/src/index';
 
 export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
-	public typeUuid: string;
-	public userUuid: string;
+	public typeId: string;
+	public userId: string;
 	public creationDate: Date;
 	public publicationDate: Date;
 	public isPublished: boolean;
@@ -12,9 +12,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 
 	constructor(post: BlogPost) {
 		super();
-		this.uuid = post?.uuid ?? '';
-		this.typeUuid = post.typeUuid;
-		this.userUuid = post.userUuid;
+		this.id = post?.id ?? '';
+		this.typeId = post.typeId;
+		this.userId = post.userId;
 		this.creationDate = post.creationDate;
 		this.publicationDate = post.publicationDate;
 		this.isPublished = post.isPublished;
@@ -24,9 +24,9 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 
 	public toPOJO(): BlogPost {
 		return {
-			uuid: this.uuid,
-			typeUuid: this.typeUuid,
-			userUuid: this.userUuid,
+			id: this.id,
+			typeId: this.typeId,
+			userId: this.userId,
 			creationDate: this.creationDate,
 			publicationDate: this.publicationDate,
 			isPublished: this.isPublished,

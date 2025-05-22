@@ -5,13 +5,13 @@ export class PostTypeEntity extends Entity implements StorableEntity<PostType> {
 	public name: string;
 	constructor(postType: PostType) {
 		super();
-		this.uuid = postType.uuid ?? '';
+		this.id = postType.id ?? '';
 		this.name = postType.name;
 	}
 
 	public toPOJO(): PostType {
 		return {
-			uuid: this.uuid,
+			id: this.id,
 			name: this.name
 		}
 	}

@@ -15,7 +15,7 @@ export class CommentController {
 		return newComment.toPOJO();
 	}
 
-	@Delete(':uuid')
+	@Delete(':id')
 	public async delete() {
 		this.service.delete;
 	}

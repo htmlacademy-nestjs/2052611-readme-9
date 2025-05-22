@@ -1,4 +1,4 @@
 export interface PostType {
-	uuid?: string,
+	id?: string,
 	name: string
 }

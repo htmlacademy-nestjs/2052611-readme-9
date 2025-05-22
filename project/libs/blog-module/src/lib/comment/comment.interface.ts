@@ -1,7 +1,7 @@
 export interface Comment {
-	uuid?: string,
-	postUuid: string,
-	userUuid: string,
+	id?: string,
+	postId: string,
+	userId: string,
 	text: string,
 	creationDate: Date
 }

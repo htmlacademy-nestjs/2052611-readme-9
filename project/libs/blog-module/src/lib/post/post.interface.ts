@@ -1,7 +1,7 @@
 export interface BlogPost {
-	uuid?: string,
-	typeUuid: string,
-	userUuid: string,
+	id?: string,
+	typeId: string,
+	userId: string,
 	creationDate: Date,
 	publicationDate: Date,
 	isPublished: boolean,

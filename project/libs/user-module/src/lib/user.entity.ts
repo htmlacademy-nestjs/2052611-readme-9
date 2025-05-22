@@ -11,7 +11,7 @@ export class UserEntity extends Entity implements StorableEntity<User> {
 
 	constructor(user: User) {
 		super();
-		this.uuid = user.uuid ?? '';
+		this.id = user.id ?? '';
 		this.email = user.email;
 		this.name = user.name;
 		this.image = user.image;
@@ -20,7 +20,7 @@ export class UserEntity extends Entity implements StorableEntity<User> {
 
 	public toPOJO(): User {
 		return {
-			uuid: this.uuid,
+			id: this.id,
 			email: this.email,
 			name: this.name,
 			passwordHash: this.passwordHash,

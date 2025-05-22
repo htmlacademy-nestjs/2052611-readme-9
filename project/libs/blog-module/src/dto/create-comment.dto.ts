@@ -1,6 +1,6 @@
 export class CreateCommentDto {
-	public postUuid: string;
-	public userUuid: string;
+	public postId: string;
+	public userId: string;
 	public text: string;
 	public creationDate: Date;
 }

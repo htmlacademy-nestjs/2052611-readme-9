@@ -8,9 +8,9 @@ export class CommentRepository extends BaseMemoryRepository<CommentEntity> {
 		super(entityFactory);
 	}
 
-	public async findAllByPost(postUuid: string): Promise<Comment[]> {
+	public async findAllByPost(postId: string): Promise<Comment[]> {
 		const entities = Array.from(this.entities.values());
-		return entities.filter(entity => entity.postUuid === postUuid);
+		return entities.filter(entity => entity.postId === postId);
 	}
 
 }
