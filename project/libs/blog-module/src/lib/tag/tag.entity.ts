@@ -1,5 +1,5 @@
 import { Tag } from "./tag.inteface";
-import { Entity, StorableEntity } from '@project/shared/src/index';
+import { Entity, StorableEntity } from '@project/shared';
 
 export class TagEntity extends Entity implements StorableEntity<Tag> {
 	public name: string;

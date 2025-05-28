@@ -1,5 +1,5 @@
 import { PostType } from "./post-type.interface";
-import { Entity, StorableEntity } from '@project/shared/src/index';
+import { Entity, StorableEntity } from '@project/shared';
 
 export class PostTypeEntity extends Entity implements StorableEntity<PostType> {
 	public name: string;

@@ -4,10 +4,10 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/blog-module"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
-  ],
-  "compilerOptions": {
-    "esModuleInterop": true
-  }
+  ]
 }

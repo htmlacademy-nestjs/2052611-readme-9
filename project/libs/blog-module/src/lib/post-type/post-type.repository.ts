@@ -1,20 +1,80 @@
-import { Injectable } from "@nestjs/common";
-import { BaseMemoryRepository } from "@project/shared/src/index";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { BasePostgresRepository, PrismaClientService } from "@project/shared";
 import { PostTypeEntity } from "./post-type.entity";
 import { PostTypeEntityFactory } from "./post-type.factory";
+import { PostType } from "./post-type.interface";
 
 @Injectable()
-export class PostTypeRepository extends BaseMemoryRepository<PostTypeEntity> {
-	constructor(entityFactory: PostTypeEntityFactory) {
-		super(entityFactory);
+export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, PostType> {
+	constructor(
+		entityFactory: PostTypeEntityFactory,
+		override readonly client: PrismaClientService
+	) {
+		super(entityFactory, client);
 	}
 
-	public async findByName(name: string): Promise<PostTypeEntity | null> {
-		const entities = Array.from(this.entities.values());
-		const newEntity = entities.find(entity => entity.name === name);
-		if (!newEntity) {
-			return null;
+	public override async save(entity: PostTypeEntity): Promise<void> {
+		const record = await this.client.postType.create({
+			data: { ...entity.toPOJO() }
+		});
+
+		entity.id = record.id;
+	}
+
+	public override async findById(id: string): Promise<PostTypeEntity> {
+		const document = await this.client.postType.findFirst({
+			where: {
+				id,
+			}
+		});
+
+		if (!document) {
+			throw new NotFoundException(`Post type with id=${id} not found`)
 		}
-		return this.entityFactory.create(newEntity);
+
+		return this.createEntityFromDocument(document);
+	}
+
+	public override async deleteById(id: string): Promise<void> {
+		await this.client.postType.delete({
+			where: {
+				id,
+			}
+		});
+	}
+
+	public override async update(entity: PostTypeEntity): Promise<void> {
+		await this.client.postType.update({
+			where: { id: entity.id },
+			data: {
+				name: entity.name,
+			}
+		});
+	}
+
+	public async findByIds(ids: string[]): Promise<PostTypeEntity[]> {
+		const records = await this.client.postType.findMany({
+			where: {
+				id: {
+					in: ids,
+				}
+			}
+		});
+
+		return records.map((record: PostType) => this.createEntityFromDocument(record));
+	}
+
+	public async getAll(): Promise<PostTypeEntity[]> {
+		const records = await this.client.postType.findMany();
+		return records.map((record: PostType) => this.createEntityFromDocument(record));
+	}
+
+	public async isExists(name: string): Promise<Boolean> {
+		const document = await this.client.postType.findFirst({
+			where: {
+				name,
+			}
+		});
+		return document ? true : false;
 	}
 }

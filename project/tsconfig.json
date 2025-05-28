@@ -7,25 +7,25 @@
   },
   "references": [
     {
-      "path": "./apps/user"
+      "path": "./libs/user-module/config"
     },
     {
       "path": "./apps/notification"
-    },
-    {
-      "path": "./apps/blog-e2e"
-    },
-    {
-      "path": "./apps/blog"
-    },
-    {
-      "path": "./libs/shared"
     },
     {
       "path": "./libs/blog-module"
     },
     {
       "path": "./libs/user-module"
+    },
+    {
+      "path": "./libs/shared"
+    },
+    {
+      "path": "./apps/blog"
+    },
+    {
+      "path": "./apps/user"
     }
   ]
 }

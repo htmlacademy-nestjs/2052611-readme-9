@@ -1,4 +1,4 @@
-import { BaseMemoryRepository } from "@project/shared/src/index";
+import { BaseMemoryRepository } from "@project/shared";
 import { TagEntity } from "./tag.entity";
 import { TagEntityFactory } from "./tag.factory";
 

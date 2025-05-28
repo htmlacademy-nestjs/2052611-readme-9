@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { EntityFactory } from "@project/shared/src/index";
+import { EntityFactory } from "@project/shared";
 import { CommentEntity } from "./comment.entity";
 import { Comment } from "./comment.interface";
 

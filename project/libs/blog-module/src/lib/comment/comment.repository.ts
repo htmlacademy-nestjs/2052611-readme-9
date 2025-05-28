@@ -1,4 +1,4 @@
-import { BaseMemoryRepository } from "@project/shared/src/index";
+import { BaseMemoryRepository } from "@project/shared";
 import { CommentEntity } from "./comment.entity";
 import { CommentEntityFactory } from "./comment.factory";
 import { Comment } from "./comment.interface";

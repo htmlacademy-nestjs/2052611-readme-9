@@ -1,5 +1,5 @@
 import { BlogPost } from "./post.interface";
-import { Entity, StorableEntity } from '@project/shared/src/index';
+import { Entity, StorableEntity } from '@project/shared';
 
 export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 	public typeId: string;
