@@ -1,6 +1,9 @@
-import { Controller, Get, Post, Query } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param } from "@nestjs/common";
 import { PostType } from "./post-type.interface";
 import { PostTypeService } from "./post-type.service";
+import { PostTypeRdo } from "../../rdo/post-type.rdo";
+import { fillDto } from "@project/shared";
+import { CreatePostTypeDto } from "src/dto/create-post-type.dto";
 
 @Controller('post-type')
 export class PostTypeController {
@@ -9,8 +12,8 @@ export class PostTypeController {
 	) { }
 
 	@Post('/')
-	public async create(@Query('name') name: string): Promise<PostType> {
-		const newType = await this.service.create({ name: name });
+	public async create(@Body() dto: CreatePostTypeDto): Promise<PostType> {
+		const newType = await this.service.create(dto);
 		return newType.toPOJO();
 	}
 
@@ -18,5 +21,11 @@ export class PostTypeController {
 	public async getAll(): Promise<PostType[]> {
 		const types = await this.service.getAll();
 		return types.map(el => el.toPOJO());
+	}
+
+	@Get('/:id')
+	public async getById(@Param('id') id: string): Promise<PostType> {
+		const entity = await this.service.findById(id);
+		return fillDto(PostTypeRdo, entity.toPOJO());
 	}
 }

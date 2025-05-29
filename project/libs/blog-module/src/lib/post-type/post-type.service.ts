@@ -20,6 +20,10 @@ export class PostTypeService {
 		return newEntity;
 	}
 
+	public async findById(id: string): Promise<PostTypeEntity> {
+		return this.repository.findById(id);
+	}
+
 	public async findByIds(ids: string[]): Promise<PostTypeEntity[]> {
 		const types = await this.repository.findByIds(ids);
 		if (types.length !== ids.length) {
