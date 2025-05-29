@@ -8,12 +8,12 @@ import { PostType } from "./post-type.interface";
 export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, PostType> {
 	constructor(
 		entityFactory: PostTypeEntityFactory,
-		override readonly client: PrismaClientService
+		readonly client: PrismaClientService
 	) {
 		super(entityFactory, client);
 	}
 
-	public override async save(entity: PostTypeEntity): Promise<void> {
+	public async save(entity: PostTypeEntity): Promise<void> {
 		const record = await this.client.postType.create({
 			data: { ...entity.toPOJO() }
 		});
@@ -21,7 +21,7 @@ export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, P
 		entity.id = record.id;
 	}
 
-	public override async findById(id: string): Promise<PostTypeEntity> {
+	public async findById(id: string): Promise<PostTypeEntity> {
 		const document = await this.client.postType.findFirst({
 			where: {
 				id,
@@ -35,7 +35,7 @@ export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, P
 		return this.createEntityFromDocument(document);
 	}
 
-	public override async deleteById(id: string): Promise<void> {
+	public async deleteById(id: string): Promise<void> {
 		await this.client.postType.delete({
 			where: {
 				id,
@@ -43,7 +43,7 @@ export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, P
 		});
 	}
 
-	public override async update(entity: PostTypeEntity): Promise<void> {
+	public async update(entity: PostTypeEntity): Promise<void> {
 		await this.client.postType.update({
 			where: { id: entity.id },
 			data: {

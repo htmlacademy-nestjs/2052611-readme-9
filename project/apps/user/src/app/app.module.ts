@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from '@project/user-module/src/index'
+import { UserModule } from '@project/user-module'
 import { UserConfigModule, getMongooseOptions } from '@project/user-config'
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
 

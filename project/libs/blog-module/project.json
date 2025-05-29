@@ -4,5 +4,20 @@
   "sourceRoot": "libs/blog-module/src",
   "projectType": "library",
   "tags": [],
-  "targets": {}
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/blog-module",
+        "tsConfig": "libs/blog-module/tsconfig.lib.json",
+        "main": "libs/blog-module/src/index.ts",
+        "assets": [
+          "libs/blog-module/*.md"
+        ]
+      }
+    }
+  }
 }

@@ -1,11 +1,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    //"allowSyntheticDefaultImports": true,
     "rootDir": ".",
     "sourceMap": true,
-    "declaration": true,
-    "composite": true,
+    "declaration": false,
+    //"composite": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
@@ -13,15 +13,29 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@project/blog-module": ["libs/blog-module/src/index.ts"],
-      "@project/shared": ["libs/shared/src/index.ts"],
-      "@project/user-config": ["libs/user-module/config/src/index.ts"],
-      "@project/user-module": ["libs/user-module/src/index.ts"]
+      "@project/blog-module": [
+        "libs/blog-module/src/index.ts"
+      ],
+      "@project/shared": [
+        "libs/shared/src/index.ts"
+      ],
+      "@project/user-config": [
+        "libs/user-module/config/src/index.ts"
+      ],
+      "@project/user-module": [
+        "libs/user-module/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
