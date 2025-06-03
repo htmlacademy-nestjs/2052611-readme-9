@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from '@project/user-module'
-import { UserConfigModule, getMongooseOptions } from '@project/user-config'
 import { MongooseModule } from '@nestjs/mongoose/dist/mongoose.module';
+import { UserConfigModule, UserModule, getMongooseOptions } from '@project/user-module';
 
 @Module({
   imports: [UserModule, UserConfigModule, MongooseModule.forRootAsync(

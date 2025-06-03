@@ -1,11 +1,11 @@
-import { Body, Controller, Get, Param, Post, HttpStatus } from "@nestjs/common";
-import { CreateUserDto } from "src/dto/create-user.dto";
-import { LoginUserDto } from "src/dto/login-user.dto";
-import { UserService } from "./user.service";
+import { Body, Controller, Get, HttpStatus, Param, Post } from "@nestjs/common";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from "../../dto/create-user.dto";
+import { LoginUserDto } from "../../dto/login-user.dto";
+import { LoggedUserRdo } from "../../rdo/logged-user.rdo";
+import { UserRdo } from "../../rdo/user.rdo";
 import { AUTH_USER_CREATED, AUTH_USER_EXISTS, AUTH_USER_FOUND, AUTH_USER_LOGIN_ERROR, AUTH_USER_LOGIN_SUCCESS, AUTH_USER_NOT_FOUND } from "./user.constant";
-import { LoggedUserRdo } from "src/rdo/logged-user.rdo";
-import { UserRdo } from "src/rdo/user.rdo";
+import { UserService } from "./user.service";
 
 @ApiTags('Users')
 @Controller('users')

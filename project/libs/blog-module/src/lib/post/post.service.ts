@@ -1,5 +1,5 @@
 import { Body, Injectable } from "@nestjs/common";
-import { CreatePostDto } from "src/dto/create-post.dto";
+import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostRepository } from "./post.repository";
 
@@ -36,8 +36,8 @@ export class BlogPostService {
 
 	public async repost(id: string) {
 		const existPost = this.repository.findById(id);
-		if (existPost !== null) {
+		// if (existPost !== null) {
 
-		}
+		// }
 	}
 }
