@@ -1,39 +1,34 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "composite": true,
-    "declarationMap": true,
-    "emitDeclarationOnly": true,
+    //"allowSyntheticDefaultImports": true,
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    //"composite": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "isolatedModules": false,
+    "target": "es2015",
+    "module": "esnext",
     "lib": [
-      "es2022",
-      "DOM"
+      "es2020",
+      "dom"
     ],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "noEmitOnError": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
     "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2022",
-    "rootDir": ".",
+    "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
       "@project/blog-module": [
         "libs/blog-module/src/index.ts"
       ],
-      "@project/user-config": [
-        "libs/user-module/config/src/index.ts"
-      ],
       "@project/shared": [
         "libs/shared/src/index.ts"
+      ],
+      "@project/user-config": [
+        "libs/user-module/config/src/index.ts"
       ],
       "@project/user-module": [
         "libs/user-module/src/index.ts"

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { BaseMongoRepository } from '@project/shared/src/index';
+import { BaseMongoRepository } from '@project/shared';
 import { UserEntity } from './user.entity';
 import { UserFactory } from './user.factory';
 import { UserModel } from './user.model';

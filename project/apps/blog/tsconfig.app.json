@@ -2,12 +2,16 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
+    "module": "ES2015",
     "types": [
       "node"
     ],
     "emitDecoratorMetadata": true,
-    "target": "es2021"
+    "target": "es2021",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "baseUrl": "."
   },
   "exclude": [
     "jest.config.ts",
@@ -16,5 +20,10 @@
   ],
   "include": [
     "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../../libs/blog-module/tsconfig.json"
+    }
   ]
 }

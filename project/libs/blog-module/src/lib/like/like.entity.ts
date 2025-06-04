@@ -1,4 +1,4 @@
-import { Entity, StorableEntity } from "@project/shared/src/index";
+import { Entity, StorableEntity } from "@project/shared";
 import { Like } from "./like.interface";
 
 export class LikeEntity extends Entity implements StorableEntity<Like> {

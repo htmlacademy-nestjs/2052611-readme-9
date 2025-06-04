@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BaseMemoryRepository } from '@project/shared/src/index';
+import { BaseMemoryRepository } from '@project/shared';
 import { LikeEntity } from './like.entity';
 import { LikeEntityFactory } from './like.factory';
 import { Like } from './like.interface';

@@ -1,0 +1,14 @@
+# get all types
+GET http://localhost:3000/api/post-types HTTP/1.1
+
+###
+# get all types
+GET http://localhost:3000/api/post-types/076f46b1-f778-4f05-93df-e5b10ab6146e HTTP/1.1
+
+###
+# Create a new type
+POST http://localhost:3000/api/post-types HTTP/1.1
+Content-Type: application/json
+{
+  "name": "video"
+}

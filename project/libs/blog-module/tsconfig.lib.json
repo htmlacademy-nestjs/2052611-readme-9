@@ -5,11 +5,12 @@
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*.ts"
+  "include": ["src/**/*.ts"],
+  "references": [
+    {
+      "path": "../shared/tsconfig.lib.json"
+    }
   ]
 }

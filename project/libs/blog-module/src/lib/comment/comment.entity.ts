@@ -1,4 +1,4 @@
-import { Entity, StorableEntity } from "@project/shared/src/index";
+import { Entity, StorableEntity } from "@project/shared";
 import { Comment } from "./comment.interface";
 
 export class CommentEntity extends Entity implements StorableEntity<Comment> {
