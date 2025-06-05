@@ -1,9 +1,11 @@
 export { BaseMemoryRepository } from './lib/data-access/base-memory.repository';
 export { BaseMongoRepository } from './lib/data-access/base-mongo.repository';
 export { BasePostgresRepository } from './lib/data-access/base-postgres.repository';
+export { PrismaClientModule } from './lib/data-access/prisma-client.module';
+export { PrismaClientService } from './lib/data-access/prisma-client.service';
 export { Entity } from './lib/core/entity';
 export { EntityFactory } from './lib/core/entity.factory';
 export { StorableEntity } from './lib/core/storable-entity.interface';
-export { PrismaClientModule } from './lib/data-access/prisma-client.module';
-export { PrismaClientService } from './lib/data-access/prisma-client.service';
+export { PaginationResult } from './lib/core/pagination.interface';
+export { SortDirection } from './lib/core/sort-direction.interface';
 export * from './lib/common';

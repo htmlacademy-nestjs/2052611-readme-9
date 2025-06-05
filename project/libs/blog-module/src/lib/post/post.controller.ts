@@ -3,24 +3,24 @@ import { CreatePostDto } from "src/dto/create-post.dto";
 import { BlogPost } from "./post.interface";
 import { BlogPostService } from "./post.service";
 
-@Controller('posts')
+@Controller()
 export class BlogPostController {
 	constructor(
 		private readonly service: BlogPostService
 	) { }
 
-	@Post()
+	@Post('posts/')
 	public async create(@Body() dto: CreatePostDto): Promise<BlogPost> {
 		const newPost = await this.service.create(dto);
 		return newPost.toPOJO();
 	}
 
-	@Delete(':id')
+	@Delete('posts/:id')
 	public async delete(@Param('id') id: string) {
 		this.service.delete(id);
 	}
 
-	@Post(':id/repost')
+	@Post('posts/:id/repost')
 	public async repost(@Param('id') id: string) {
 		this.service.repost(id);
 	}

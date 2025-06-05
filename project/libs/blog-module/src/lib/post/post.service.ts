@@ -10,12 +10,12 @@ export class BlogPostService {
 	) { }
 
 	public async create(@Body() dto: CreatePostDto): Promise<BlogPostEntity> {
-		const { typeId, userId, creationDate, publicationDate, tags, data, isPublished } = dto;
+		const { typeId, userId, createdAt, updatedAt, tags, data, isPublished } = dto;
 		const post = {
 			typeId,
 			userId,
-			creationDate,
-			publicationDate,
+			createdAt,
+			updatedAt,
 			tags,
 			data,
 			isPublished

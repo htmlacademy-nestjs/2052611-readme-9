@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { BaseMemoryRepository } from "@project/shared";
+import { BasePostgresRepository, PrismaClientService } from "@project/shared";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostEntityFactory } from "./post.factory";
+import { BlogPost } from "./post.interface";
 
 @Injectable()
-export class BlogPostRepository extends BaseMemoryRepository<BlogPostEntity> {
-	constructor(entityFactory: BlogPostEntityFactory) {
-		super(entityFactory);
+export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, BlogPost> {
+	constructor(entityFactory: BlogPostEntityFactory,
+		readonly client: PrismaClientService) {
+		super(entityFactory, client);
 	}
 }
