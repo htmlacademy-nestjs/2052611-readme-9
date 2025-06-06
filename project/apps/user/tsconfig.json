@@ -4,13 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../../libs/user-module/config"
-    },
-    {
-      "path": "../../libs/user-module"
-    },
-    {
       "path": "./tsconfig.app.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
 }

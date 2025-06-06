@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, HttpStatus } from "@nestjs/common";
-import { CreateUserDto } from "src/dto/create-user.dto";
-import { LoginUserDto } from "src/dto/login-user.dto";
+import { CreateUserDto } from "../../dto/create-user.dto";
+import { LoginUserDto } from "../../dto/login-user.dto";
 import { UserService } from "./user.service";
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AUTH_USER_CREATED, AUTH_USER_EXISTS, AUTH_USER_FOUND, AUTH_USER_LOGIN_ERROR, AUTH_USER_LOGIN_SUCCESS, AUTH_USER_NOT_FOUND } from "./user.constant";
