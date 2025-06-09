@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { BlogPostModule } from '@project/blog-module';
+import { ConfigModule } from '@nestjs/config';
+import { BlogPostModule, CommentModule, LikeModule, PostTypeModule, TagModule } from '@project/blog-module';
 
 @Module({
-  imports: [BlogPostModule]
+  imports: [ConfigModule.forRoot({
+    isGlobal: true
+  }), BlogPostModule, CommentModule, LikeModule, PostTypeModule, TagModule]
 })
 export class AppModule { }

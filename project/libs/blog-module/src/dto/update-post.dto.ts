@@ -1,23 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayNotEmpty, IsArray, IsBoolean, IsEnum, IsISO8601, IsMongoId, IsObject, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength } from "class-validator";
-import { PostTypeUUID } from "../lib/post-type/post-type.constant";
+import { ArrayNotEmpty, IsArray, IsBoolean, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength } from "class-validator";
 
-export class CreatePostDto {
-	@ApiProperty({
-		description: "ID of post's type",
-		example: "076f46b1-f778-4f05-93df-e5b10ab6146e",
-		enum: PostTypeUUID
-	})
-	@IsEnum(PostTypeUUID)
-	public typeId: PostTypeUUID;
-
-	@ApiProperty({
-		description: 'ID of user',
-		example: '658170cbb954e9f5b905ccf4'
-	})
-	@IsMongoId()
-	public userId: string;
-
+export class UpdatePostDto {
 	@ApiProperty({
 		description: 'Status of publication',
 		example: "true"
@@ -108,10 +92,4 @@ export class CreatePostDto {
 	@IsOptional()
 	@MaxLength(300)
 	public description?: string;
-
-	@ApiProperty({
-		description: "ID or original post (for 'repost' post type)",
-		example: "076f46b1-f778-4f05-93df-e5b10ab6146e"
-	})
-	public originalPostId?: string;
 }

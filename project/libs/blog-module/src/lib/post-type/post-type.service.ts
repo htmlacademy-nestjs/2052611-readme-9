@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
-import { CreatePostTypeDto } from "src/dto/create-post-type.dto";
+import { CreatePostTypeDto } from "../../dto/create-post-type.dto";
 import { POST_TYPE_EXISTS } from "./post-type.constant";
 import { PostTypeEntity } from "./post-type.entity";
 import { PostTypeRepository } from "./post-type.repository";

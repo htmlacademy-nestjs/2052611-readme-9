@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
-import { CreateCommentDto } from "src/dto/create-comment.dto";
+import { CreateCommentDto } from "../../dto/create-comment.dto.js";
 import { Comment } from "./comment.interface";
 import { CommentService } from "./comment.service";
 import { fillDto } from "@project/shared";
-import { CommentRdo } from "src/rdo/comment.rdo";
+import { CommentRdo } from "../../rdo/comment.rdo.js";
 
 @Controller()
 export class CommentController {

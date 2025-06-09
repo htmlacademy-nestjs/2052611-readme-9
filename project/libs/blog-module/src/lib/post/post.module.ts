@@ -6,11 +6,14 @@ import { TagModule } from "../tag/tag.module";
 */
 import { BlogPostController } from "./post.controller";
 import { BlogPostService } from "./post.service";
+import { BlogPostRepository } from "./post.repository";
+import { BlogPostEntityFactory } from "./post.factory";
+import { PrismaClientModule } from "@project/shared";
 
 @Module({
 	controllers: [BlogPostController],
-	providers: [BlogPostService],
-	exports: [BlogPostService]
-	/*imports: [TagModule, LikeModule, CommentModule]*/
+	providers: [BlogPostRepository, BlogPostService, BlogPostEntityFactory],
+	exports: [BlogPostService],
+	imports: [PrismaClientModule]
 })
 export class BlogPostModule { }

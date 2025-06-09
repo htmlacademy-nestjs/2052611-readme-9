@@ -15,7 +15,7 @@ export class PostTypeRepository extends BasePostgresRepository<PostTypeEntity, P
 
 	public async save(entity: PostTypeEntity): Promise<void> {
 		const record = await this.client.postType.create({
-			data: { ...entity.toPOJO() }
+			data: { name: entity.name }
 		});
 
 		entity.id = record.id;
