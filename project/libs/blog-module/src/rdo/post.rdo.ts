@@ -27,4 +27,31 @@ export class BlogPostRdo {
 	@Expose()
 	@Type(() => CommentRdo)
 	public comments: CommentRdo[];
+
+	@Expose()
+	public author?: string;
+
+	@Expose()
+	public description?: string;
+
+	@Expose()
+	public file?: string;
+
+	@Expose()
+	public originalPostId?: string;
+
+	@Expose()
+	public preview?: string;
+
+	@Expose()
+	public quote?: string;
+
+	@Expose()
+	public text?: string;
+
+	@Expose()
+	public title?: string;
+
+	@Expose()
+	public url?: string;
 }

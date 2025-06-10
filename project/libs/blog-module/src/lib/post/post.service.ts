@@ -5,6 +5,7 @@ import { BlogPostRepository } from "./post.repository";
 import { PostTypeUUID } from '../post-type/post-type.constant';
 import { BlogPostQuery } from "./post.query";
 import { PaginationResult } from "@project/shared";
+import { UpdatePostDto } from "../../dto/update-post.dto";
 
 @Injectable()
 export class BlogPostService {
@@ -78,42 +79,42 @@ export class BlogPostService {
 		}
 	}
 
+	public async updatePost(id: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
+		const existsPost = await this.repository.findById(id);
+		let isSameTags = true;
+		let hasChanges = false;
+
+		for (const [key, value] of Object.entries(dto)) {
+			if (value !== undefined && key !== 'tags' && existsPost[key] !== value) {
+				existsPost[key] = value;
+				hasChanges = true;
+			}
+
+			if (key === 'tags' && value) {
+				const currentIds = existsPost.tags;
+				isSameTags = currentIds.length === value.length &&
+					currentIds.some((el) => value.includes(el));
+
+				if (!isSameTags) {
+					await this.repository.saveTags(value, id);
+				}
+			}
+
+		}
+
+		if (isSameTags && !hasChanges) {
+			return existsPost;
+		}
+
+		await this.repository.update(existsPost);
+
+		return existsPost;
+	}
+
 	public async getPost(id: string): Promise<BlogPostEntity> {
 		return this.repository.findById(id);
 	}
-	/*
-		public async updatePost(id: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
-			const existsPost = await this.repository.findById(id);
-			let isSameTags = true;
-			let hasChanges = false;
-	
-			for (const [key, value] of Object.entries(dto)) {
-				if (value !== undefined && key !== 'tags' && existsPost[key] !== value) {
-					existsPost[key] = value;
-					hasChanges = true;
-				}
-	
-				if (key === 'tags' && value) {
-					const currentIds = existsPost.tags;
-					isSameTags = currentIds.length === value.length &&
-						currentIds.some((el) => value.includes(el));
-	
-					if (!isSameTags) {
-						await this.repository.saveTags(value, id);
-					}
-				}
-					
-			}
-	
-			if (isSameTags && !hasChanges) {
-				return existsPost;
-			}
-	
-			await this.repository.update(existsPost);
-	
-			return existsPost;
-		}
-	*/
+
 	public async getAllPosts(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
 		return this.repository.find(query);
 	}
