@@ -3,10 +3,13 @@ import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPost } from "./post.interface";
 import { BlogPostService } from "./post.service";
 import { fillDto } from "@project/shared";
+import { ApiTags } from "@nestjs/swagger";
 /*
 import { BlogPostQuery } from "./post.query";
 import { PostWithPaginationRdo } from "src/rdo/post-with-pagination.rdo";
 */
+
+@ApiTags('Posts')
 @Controller()
 export class BlogPostController {
 	constructor(

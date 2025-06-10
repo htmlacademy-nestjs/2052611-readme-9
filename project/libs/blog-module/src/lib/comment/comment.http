@@ -13,5 +13,5 @@ Content-Type: application/json
 ###
 
 # Delete comment by ID
-DELETE POST http://localhost:3000/api/comments/a733b017-cc04-4dfc-909d-debecf7b418d  HTTP/1.1
+DELETE http://localhost:3000/api/comments/a733b017-cc04-4dfc-909d-debecf7b418d  HTTP/1.1
 ###

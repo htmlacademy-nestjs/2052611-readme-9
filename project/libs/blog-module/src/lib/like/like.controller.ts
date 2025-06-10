@@ -1,6 +1,8 @@
 import { Controller, Param, Post, Query, Get } from "@nestjs/common";
 import { LikeService } from "./like.service";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('Posts')
 @Controller()
 export class LikeController {
 	constructor(

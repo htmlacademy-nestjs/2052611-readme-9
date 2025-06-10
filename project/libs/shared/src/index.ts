@@ -8,4 +8,7 @@ export { EntityFactory } from './lib/core/entity.factory.js';
 export { StorableEntity } from './lib/core/storable-entity.interface.js';
 export { PaginationResult } from './lib/core/pagination.interface.js';
 export { SortDirection } from './lib/core/sort-direction.interface.js';
+export { Token } from './lib/core/token.interface.js';
+export { TokenPayload } from './lib/core/token-payload.interface.js';
+export { MongoIdValidationPipe } from './lib/pipes/mongo-id-validation.pipe.js';
 export * from './lib/common.js';
