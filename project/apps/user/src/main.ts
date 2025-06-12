@@ -9,16 +9,18 @@ import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 
+const GLOBAL_PREFIX = 'api';
+const DEFAULT_PORT = 3000;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
   const config = new DocumentBuilder()
     .setTitle('User service')
     .setDescription('User service API')
     .setVersion('1.0')
     .build();
 
-  app.setGlobalPrefix(globalPrefix);
+  app.setGlobalPrefix(GLOBAL_PREFIX);
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
@@ -28,10 +30,10 @@ async function bootstrap() {
   }));
 
   const configService = app.get(ConfigService);
-  const port = configService.get('application.port') || 3000;
+  const port = configService.get('application.port') || DEFAULT_PORT;
 
   await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/${GLOBAL_PREFIX}`);
 }
 
 bootstrap();

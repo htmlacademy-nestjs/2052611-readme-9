@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostRepository } from "./post.repository";
@@ -13,43 +13,7 @@ export class BlogPostService {
 		private readonly repository: BlogPostRepository
 	) { }
 
-	private validateDto(typeName: string, dto: CreatePostDto, required: string[], optional: string[]): string[] {
-		const allOptionalParameters: string[] = ['author', 'description', 'file', 'originalPostId', 'preview', 'quote', 'text', 'title', 'url'];
-		const requiredAndOptional: string = "'" + required.concat(optional).join("','") + "'";
-		let errorMessages: string[] = [];
-		required.forEach(el => {
-			if (!dto[el]) {
-				errorMessages.push(`"${typeName}" posts must have "${el}" parameter(s)`);
-			}
-		})
-		for (let i = 0; i < allOptionalParameters.length; i++) {
-			if (dto[allOptionalParameters[i]] && !required.includes(allOptionalParameters[i]) && !optional.includes(allOptionalParameters[i])) {
-				errorMessages.push(`"${typeName}" posts must not have parameters other than ${requiredAndOptional}`);
-				break;
-			}
-		}
-		return errorMessages;
-	}
-
 	public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
-		let errorMessages: string[];
-		switch (dto.typeId) {
-			case PostTypeUUID.Link:
-				errorMessages = this.validateDto("Link", dto, ["url"], ["description"]);
-			case PostTypeUUID.Photo:
-				errorMessages = this.validateDto("Photo", dto, ["file"], []);
-			case PostTypeUUID.Quote:
-				errorMessages = this.validateDto("Quote", dto, ["author", "quote"], []);
-			case PostTypeUUID.Repost:
-				errorMessages = this.validateDto("Repost", dto, ["originalPostId"], []);
-			case PostTypeUUID.Text:
-				errorMessages = this.validateDto("Text", dto, ["preview", "text", "title"], []);
-			case PostTypeUUID.Video:
-				errorMessages = this.validateDto("Video", dto, ["title", "url"], []);
-		}
-		if (errorMessages.length > 0) {
-			throw new BadRequestException(errorMessages.join())
-		}
 		const newEntity = new BlogPostEntity(dto);
 		this.repository.save(newEntity);
 		return newEntity;

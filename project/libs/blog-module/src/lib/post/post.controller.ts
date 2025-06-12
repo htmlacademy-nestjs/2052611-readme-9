@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Param, Post, Query, Get, Patch } from "@nestj
 import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostService } from "./post.service";
 import { fillDto } from "@project/shared";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiQuery, ApiTags } from "@nestjs/swagger";
 import { BlogPostQuery } from "./post.query";
 import { PostWithPaginationRdo } from "../../rdo/post-with-pagination.rdo";
 import { UpdatePostDto } from "../../dto/update-post.dto";
@@ -15,6 +15,9 @@ export class BlogPostController {
 		private readonly service: BlogPostService
 	) { }
 
+	@ApiQuery({
+		type: BlogPostQuery
+	})
 	@Get('posts/')
 	public async getAll(@Query() query: BlogPostQuery) {
 		const postsWithPagination = await this.service.getAllPosts(query);

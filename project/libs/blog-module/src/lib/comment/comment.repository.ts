@@ -2,8 +2,9 @@ import { BasePostgresRepository, PrismaClientService } from "@project/shared";
 import { CommentEntity } from "./comment.entity";
 import { CommentEntityFactory } from "./comment.factory";
 import { Comment } from "./comment.interface";
-import { NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 
+@Injectable()
 export class CommentRepository extends BasePostgresRepository<CommentEntity, Comment> {
 	constructor(
 		entityFactory: CommentEntityFactory,

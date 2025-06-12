@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayNotEmpty, IsArray, IsBoolean, IsEnum, IsISO8601, IsMongoId, IsObject, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsBoolean, IsDefined, IsEnum, IsISO8601, IsMongoId, IsObject, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength, ValidateIf } from "class-validator";
 import { PostTypeUUID } from "../lib/post-type/post-type.constant";
 
 export class CreatePostDto {
@@ -29,6 +29,7 @@ export class CreatePostDto {
 		description: "Array of tag's IDs",
 		example: "['f733b017-cc04-4dfc-909d-debecf7b418d']"
 	})
+	@IsOptional()
 	@IsArray()
 	@ArrayNotEmpty()
 	@IsUUID('all', { each: true })
@@ -38,8 +39,9 @@ export class CreatePostDto {
 		description: "Title (for 'text' and 'video' post types)",
 		example: "Post's title"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Text || obj.typeId === PostTypeUUID.Video)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	@MinLength(20)
 	@MaxLength(50)
 	public title?: string;
@@ -49,15 +51,17 @@ export class CreatePostDto {
 		example: "Post's title"
 	})
 	@IsUrl()
-	@IsOptional()
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Link || obj.typeId === PostTypeUUID.Video)
+	@IsDefined()
 	public url?: string;
 
 	@ApiProperty({
 		description: "Preview (for 'text' post type)",
 		example: "Post's preview"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Text)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	@MinLength(50)
 	@MaxLength(255)
 	public preview?: string;
@@ -66,8 +70,9 @@ export class CreatePostDto {
 		description: "Text (for 'text' post type)",
 		example: "Post's full text"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Text)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	@MinLength(100)
 	@MaxLength(1024)
 	public text?: string;
@@ -76,8 +81,9 @@ export class CreatePostDto {
 		description: "Quote's text (for 'quote' post type)",
 		example: "Quote's text"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Quote)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	@MinLength(20)
 	@MaxLength(300)
 	public quote?: string;
@@ -86,8 +92,9 @@ export class CreatePostDto {
 		description: "Quote's author (for 'quote' post type)",
 		example: "Quote's author"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Quote)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	@MinLength(3)
 	@MaxLength(50)
 	public author?: string;
@@ -96,16 +103,18 @@ export class CreatePostDto {
 		description: "File (for 'photo' post type)",
 		example: "File"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Photo)
+	@IsDefined()
 	@IsString()
-	@IsOptional()
 	public file?: string;
 
 	@ApiProperty({
 		description: "Link's description (for 'link' post type)",
 		example: "Link's description"
 	})
-	@IsString()
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Quote)
 	@IsOptional()
+	@IsString()
 	@MaxLength(300)
 	public description?: string;
 
@@ -113,5 +122,8 @@ export class CreatePostDto {
 		description: "ID or original post (for 'repost' post type)",
 		example: "076f46b1-f778-4f05-93df-e5b10ab6146e"
 	})
+	@ValidateIf(obj => obj.typeId === PostTypeUUID.Repost)
+	@IsDefined()
+	@IsUUID()
 	public originalPostId?: string;
 }

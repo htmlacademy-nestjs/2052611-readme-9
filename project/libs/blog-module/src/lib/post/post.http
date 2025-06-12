@@ -19,14 +19,15 @@ POST http://localhost:3000/api/posts HTTP/1.1
 Content-Type: application/json
 
 {
+  "url": "Пушкин",
   "author": "Пушкин",
   "quote": "Текст какой-нибудь цитаты",
   "typeId": "5e50ecef-6ba3-4a58-8c30-0159943157fd",
   "userId": "658170cbb954e9f5b905ccf4",
-  "isPublished": true,
-  "tags": ["f733b017-cc04-4dfc-909d-debecf7b527e"]
+  "isPublished": true
 }
-
+#,
+#  "tags": ["f733b017-cc04-4dfc-909d-debecf7b527e"]
 ###
 
 # Delete the post by id
