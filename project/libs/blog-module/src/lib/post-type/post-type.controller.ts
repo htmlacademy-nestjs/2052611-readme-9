@@ -3,7 +3,7 @@ import { PostType } from "./post-type.interface";
 import { PostTypeService } from "./post-type.service";
 import { PostTypeRdo } from "../../rdo/post-type.rdo";
 import { fillDto } from "@project/shared";
-import { CreatePostTypeDto } from "src/dto/create-post-type.dto";
+import { CreatePostTypeDto } from "../../dto/create-post-type.dto";
 
 @Controller('post-type')
 export class PostTypeController {

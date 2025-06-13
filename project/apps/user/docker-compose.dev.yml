@@ -13,7 +13,7 @@ services:
       - 27017:27017
 
     volumes:
-      - user.volume:/data/db
+      - usermongodb:/data/db
 
     healthcheck:
       test: echo 'mongo.user.runCommand("ping").ok' | mongo mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${MONGO_PORT}/?authSource=${MONGO_DB} --quiet
@@ -36,4 +36,4 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongo.user:${MONGO_PORT}/
 
 volumes:
-  user.volume:
+  usermongodb:

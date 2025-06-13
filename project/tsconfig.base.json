@@ -1,11 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    //"allowSyntheticDefaultImports": true,
     "rootDir": ".",
     "sourceMap": true,
     "declaration": false,
-    //"composite": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
@@ -27,15 +25,13 @@
       "@project/shared": [
         "libs/shared/src/index.ts"
       ],
-      "@project/user-config": [
-        "libs/user-module/config/src/index.ts"
-      ],
       "@project/user-module": [
         "libs/user-module/src/index.ts"
       ]
-    }
+    },
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "tmp"
   ]
 }

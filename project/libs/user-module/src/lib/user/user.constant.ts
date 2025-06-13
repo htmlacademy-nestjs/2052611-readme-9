@@ -6,3 +6,4 @@ export const AUTH_USER_PASSWORD_WRONG = 'User password is wrong';
 export const AUTH_USER_LOGIN_SUCCESS = 'User has been successfully logged';
 export const AUTH_USER_LOGIN_ERROR = 'Password or Login is wrong';
 export const AUTH_USER_CREATED = 'New user has been successfully created';
+export const AUTH_EMAIL_NOT_VALID = 'Email is not valid';

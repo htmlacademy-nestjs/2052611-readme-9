@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateCommentDto } from "src/dto/create-comment.dto";
+import { CreateCommentDto } from "../../dto/create-comment.dto";
 import { CommentEntity } from "./comment.entity";
 import { CommentRepository } from "./comment.repository";
 
@@ -10,12 +10,9 @@ export class CommentService {
 	) { }
 
 	public async create(dto: CreateCommentDto): Promise<CommentEntity> {
-		const { postId, userId, text } = dto;
 		const comment = {
-			postId,
-			userId,
-			text,
-			creationDate: new Date()
+			createdAt: new Date(),
+			...dto
 		};
 		const newEntity = new CommentEntity(comment);
 		this.repository.save(newEntity);
@@ -26,8 +23,7 @@ export class CommentService {
 		this.repository.deleteById(id);
 	}
 
-	public async deleteByPost(postId: string) {
-		const comments = this.repository.findAllByPost(postId);
-		(await comments).forEach(item => this.repository.deleteById(item.id));
+	public async findByPost(postId: string) {
+		return this.repository.findByPostId(postId);
 	}
 }

@@ -10,8 +10,8 @@ export function getMongooseOptions(): MongooseModuleAsyncOptions {
 					config.get<string>('db.password'),
 					config.get<string>('db.host'),
 					config.get<string>('db.port'),
-					config.get<string>('db.authBase'),
 					config.get<string>('db.name'),
+					config.get<string>('db.authBase'),
 				)
 			}
 		},

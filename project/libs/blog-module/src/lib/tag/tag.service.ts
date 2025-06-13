@@ -3,6 +3,7 @@ import { CreateTagDto } from "../../dto/create-tag.dto";
 import { TAG_EXISTS } from "./tag.constant";
 import { TagEntity } from "./tag.entity";
 import { TagRepository } from "./tag.repository";
+import { Tag } from "./tag.inteface";
 
 @Injectable()
 export class TagService {
@@ -19,5 +20,9 @@ export class TagService {
 		const newEntity = new TagEntity({ name: name });
 		this.repository.save(newEntity);
 		return newEntity;
+	}
+
+	public async getAll(): Promise<Tag[]> {
+		return await this.repository.getAll();
 	}
 }

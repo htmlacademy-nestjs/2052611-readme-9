@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { PostTypeUUID } from '../../src/lib/post-type/post-type.constant'
 
 const FIRST_POST_UUID = '24613b50-8e22-4321-b87f-cce1da051da6';
 const SECOND_POST_UUID = '8cbc553d-dff9-4623-a9b6-7e7eafd19259';
 
-const FIRST_POST_TYPE_UUID = '076f46b1-f778-4f05-93df-e5b10ab6146e';
-const SECOND_POST_TYPE_UUID = '5e50ecef-6ba3-4a58-8c30-0159943157fd';
 
-const FIRST_USER_UUID = 'da1d10e5-15aa-49a1-8478-7e73d79a75c2';
-const SECOND_USER_UUID = '3521b64f-5c48-4f8f-af5e-0ca1927acbd5';
+const FIRST_USER_UUID = '658170cbb954e9f5b905ccf4';
+const SECOND_USER_UUID = '6581762309c030b503e30512';
 
 const FIRST_TAG_UUID = 'f733b017-cc04-4dfc-909d-debecf7b418d';
 const SECOND_TAG_UUID = 'f733b017-cc04-4dfc-909d-debecf7b527e';
@@ -20,17 +19,21 @@ function getPosts() {
 	return [
 		{
 			id: FIRST_POST_UUID,
-			typeId: FIRST_POST_TYPE_UUID,
+			typeId: PostTypeUUID.Text,
 			userId: FIRST_USER_UUID,
 			isPublished: false,
-			data: '{"title": "first title", "preview": "preview1", "text": "full text 1"}'
+			title: "first title",
+			preview: "preview1",
+			text: "full text 1"
 		},
 		{
 			id: SECOND_POST_UUID,
-			typeId: FIRST_POST_TYPE_UUID,
+			typeId: PostTypeUUID.Text,
 			userId: SECOND_USER_UUID,
 			isPublished: false,
-			data: '{"title": "second title", "preview": "preview2", "text": "full text 2"}'
+			title: "second title",
+			preview: "preview2",
+			text: "full text 2"
 		}
 	]
 }
@@ -38,12 +41,28 @@ function getPosts() {
 function getPostTypes() {
 	return [
 		{
-			id: FIRST_POST_TYPE_UUID,
+			id: PostTypeUUID.Text,
 			name: 'text'
 		},
 		{
-			id: SECOND_POST_TYPE_UUID,
+			id: PostTypeUUID.Quote,
 			name: 'quote'
+		},
+		{
+			id: PostTypeUUID.Repost,
+			name: 'repost'
+		},
+		{
+			id: PostTypeUUID.Video,
+			name: 'video'
+		},
+		{
+			id: PostTypeUUID.Photo,
+			name: 'photo'
+		},
+		{
+			id: PostTypeUUID.Link,
+			name: 'link'
 		}
 	]
 }
@@ -123,7 +142,9 @@ async function seedDb(prismaClient: PrismaClient) {
 				typeId: el.typeId,
 				userId: el.userId,
 				isPublished: el.isPublished,
-				data: el.data
+				title: el.title,
+				preview: el.preview,
+				text: el.text
 			}
 		});
 	}
