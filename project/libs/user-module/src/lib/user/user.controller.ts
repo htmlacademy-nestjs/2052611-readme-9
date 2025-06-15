@@ -27,6 +27,7 @@ export class UserController {
 	@Post('register')
 	public async register(@Body() dto: CreateUserDto) {
 		const user = await this.service.register(dto);
+		await this.service.registerSubscriber({ email: user.email, name: user.name });
 		return user.toPOJO();
 	}
 

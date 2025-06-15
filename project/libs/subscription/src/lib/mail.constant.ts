@@ -1,0 +1,1 @@
+export const SUBSCRIPTION_ADD_SUBSCRIBER = 'Подписка на рассылку оформлена';

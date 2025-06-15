@@ -3,12 +3,14 @@ import { CreateUserDto } from "../../dto/create-user.dto";
 import { LoginUserDto } from "../../dto/login-user.dto";
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from "./user.constant";
 import { ConfigType } from '@nestjs/config';
-import { dbConfig } from '../user-config';
+import { dbConfig, rabbitConfig } from '../user-config';
 import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
-import { Token, TokenPayload } from "@project/shared";
+import { RabbitRouting, Token, TokenPayload } from "@project/shared";
 import { User } from "./user.interface";
 import { JwtService } from "@nestjs/jwt";
+import { AmqpConnection } from "@golevelup/nestjs-rabbitmq";
+import { CreateSubscriberDto } from "../../dto/create-subscriber.dto";
 
 @Injectable()
 export class UserService {
@@ -19,7 +21,11 @@ export class UserService {
 
 		@Inject(dbConfig.KEY)
 		private readonly databaseConfig: ConfigType<typeof dbConfig>,
-		private readonly jwtService: JwtService
+		private readonly jwtService: JwtService,
+
+		private readonly rabbitClient: AmqpConnection,
+		@Inject(rabbitConfig.KEY)
+		private readonly rabbiOptions: ConfigType<typeof rabbitConfig>,
 	) { }
 
 	public async register(dto: CreateUserDto): Promise<UserEntity> {
@@ -75,5 +81,13 @@ export class UserService {
 			this.logger.error('[Token generation error]: ' + error.message);
 			throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	public async registerSubscriber(dto: CreateSubscriberDto) {
+		return this.rabbitClient.publish(
+			this.rabbiOptions.exchange,
+			RabbitRouting.AddSubscriber,
+			{ ...dto }
+		);
 	}
 }

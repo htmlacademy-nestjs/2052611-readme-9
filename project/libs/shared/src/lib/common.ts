@@ -23,11 +23,6 @@ export function fillDto<T, V>(
 	});
 }
 
-export function getMongoConnectionString(username: string,
-	password: string,
-	host: string,
-	port: string,
-	databaseName: string,
-	authDatabase: string): string {
+export function getMongoConnectionString({ username, password, host, port, databaseName, authDatabase }): string {
 	return `mongodb://${username}:${password}@${host}:${port}/${databaseName}?authSource=${authDatabase}`;
 }

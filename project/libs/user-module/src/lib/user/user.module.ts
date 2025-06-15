@@ -9,6 +9,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from '../user-config/jwt.options';
 import { JwtAccessStrategy } from '../user-config/jwt.strategy';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { getRabbitMQOptions } from '@project/shared';
 
 @Module({
 	controllers: [UserController],
@@ -20,6 +22,11 @@ import { JwtAccessStrategy } from '../user-config/jwt.strategy';
 	JwtModule.registerAsync({
 		inject: [ConfigService],
 		useFactory: getJwtOptions,
-	})],
+	}),
+	RabbitMQModule.forRootAsync(
+		getRabbitMQOptions('rabbit')
+	)
+
+	],
 })
 export class UserModule { }

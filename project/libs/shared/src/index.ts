@@ -11,4 +11,7 @@ export { SortDirection } from './lib/core/sort-direction.interface.js';
 export { Token } from './lib/core/token.interface.js';
 export { TokenPayload } from './lib/core/token-payload.interface.js';
 export { MongoIdValidationPipe } from './lib/pipes/mongo-id-validation.pipe.js';
+export { RabbitRouting } from './lib/rabbit-routing.enum.js';
 export * from './lib/common.js';
+export * from './lib/brokers.js';
+export * from './lib/mail.js';

@@ -1,0 +1,10 @@
+From: Bob <bob@mail.ru>
+To: Sam <sam@mail.ru>
+Subject: Hello Sam
+Date: Mon, 14 Jun 2025 08:00:00
+Content-Type: text/html; charset=utf8
+
+<html>
+<body>
+Hello, Sam!
+</body>

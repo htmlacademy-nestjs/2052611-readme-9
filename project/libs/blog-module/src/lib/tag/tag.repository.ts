@@ -2,7 +2,9 @@ import { BasePostgresRepository, PrismaClientService } from "@project/shared";
 import { TagEntity } from "./tag.entity";
 import { TagEntityFactory } from "./tag.factory";
 import { Tag } from "./tag.inteface";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class TagRepository extends BasePostgresRepository<TagEntity, Tag> {
 	constructor(entityFactory: TagEntityFactory,
 		readonly client: PrismaClientService) {
