@@ -6,12 +6,14 @@ export function getMongooseOptions(): MongooseModuleAsyncOptions {
 	return {
 		useFactory: async (config: ConfigService) => {
 			return {
-				uri: getMongoConnectionString(config.get<string>('db.user'),
-					config.get<string>('db.password'),
-					config.get<string>('db.host'),
-					config.get<string>('db.port'),
-					config.get<string>('db.name'),
-					config.get<string>('db.authBase'),
+				uri: getMongoConnectionString({
+					username: config.get<string>('db.user'),
+					password: config.get<string>('db.password'),
+					host: config.get<string>('db.host'),
+					port: config.get<string>('db.port'),
+					databaseName: config.get<string>('db.name'),
+					authDatabase: config.get<string>('db.authBase')
+				}
 				)
 			}
 		},
