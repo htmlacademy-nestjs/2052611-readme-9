@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-/*import { getRabbitMQConnectionString } from '@project/shared';*/
 
 function getRabbitMQConnectionString({ user, password, host, port }): string {
 	return `amqp://${user}:${password}@${host}:${port}`;
