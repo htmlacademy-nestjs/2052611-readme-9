@@ -3,11 +3,11 @@ import { CreateUserDto } from "../../dto/create-user.dto";
 import { LoginUserDto } from "../../dto/login-user.dto";
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from "./user.constant";
 import { ConfigType } from '@nestjs/config';
-import { dbConfig, rabbitConfig } from '../user-config';
+import { dbConfig, jwtConfig, rabbitConfig } from '../user-config';
 import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
 import { RabbitRouting, Token, TokenPayload } from "@project/shared";
-import { User } from "./user.interface";
+import { User } from "@project/shared";
 import { JwtService } from "@nestjs/jwt";
 import { AmqpConnection } from "@golevelup/nestjs-rabbitmq";
 import { CreateSubscriberDto } from "../../dto/create-subscriber.dto";
@@ -22,6 +22,7 @@ export class UserService {
 		@Inject(dbConfig.KEY)
 		private readonly databaseConfig: ConfigType<typeof dbConfig>,
 		private readonly jwtService: JwtService,
+		@Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
 
 		private readonly rabbitClient: AmqpConnection,
 		@Inject(rabbitConfig.KEY)
@@ -76,7 +77,11 @@ export class UserService {
 
 		try {
 			const accessToken = await this.jwtService.signAsync(payload);
-			return { accessToken };
+			const refreshToken = await this.jwtService.signAsync(payload, {
+				secret: this.jwtOptions.refreshTokenSecret,
+				expiresIn: this.jwtOptions.refreshTokenExpiresIn
+			});
+			return { accessToken, refreshToken };
 		} catch (error) {
 			this.logger.error('[Token generation error]: ' + error.message);
 			throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -89,5 +94,15 @@ export class UserService {
 			RabbitRouting.AddSubscriber,
 			{ ...dto }
 		);
+	}
+
+	public async getUserByEmail(email: string) {
+		const existUser = await this.userRepository.findByEmail(email);
+
+		if (!existUser) {
+			throw new NotFoundException(`User with email ${email} not found`);
+		}
+
+		return existUser;
 	}
 }

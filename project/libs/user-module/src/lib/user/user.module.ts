@@ -8,13 +8,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { getJwtOptions } from '../user-config/jwt.options';
-import { JwtAccessStrategy } from '../user-config/jwt.strategy';
+import { JwtAccessStrategy } from '../../strategies/jwt.strategy';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { getRabbitMQOptions } from '@project/shared';
+import { LocalStrategy } from '../../strategies/local.strategy';
+import { JwtRefreshStrategy } from '../../strategies/jwt-refresh.strategy';
 
 @Module({
 	controllers: [UserController],
-	providers: [UserRepository, UserFactory, UserService, JwtAccessStrategy],
+	providers: [UserRepository, UserFactory, UserService, JwtAccessStrategy, JwtRefreshStrategy, LocalStrategy],
 	exports: [UserRepository],
 	imports: [MongooseModule.forFeature([
 		{ name: UserModel.name, schema: UserSchema }
