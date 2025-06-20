@@ -15,6 +15,8 @@ export { RefreshTokenPayload } from './lib/core/refresh-token-payload.interface'
 export { MongoIdValidationPipe } from './lib/pipes/mongo-id-validation.pipe.js';
 export { RabbitRouting } from './lib/rabbit-routing.enum.js';
 export { User } from './lib/core/user.interface.js';
+export { RequestIdInterceptor } from './lib/interceptors/request-id.interceptor.js';
+export { InjectUserIdInterceptor } from './lib/interceptors/inject-user-id.interceptor.js';
 export * from './lib/common.js';
 export * from './lib/brokers.js';
 export * from './lib/mail.js';

@@ -6,11 +6,12 @@ import { ConfigType } from '@nestjs/config';
 import { dbConfig, jwtConfig, rabbitConfig } from '../user-config';
 import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
-import { RabbitRouting, Token, TokenPayload } from "@project/shared";
+import { createJWTPayload, RabbitRouting, Token, TokenPayload } from "@project/shared";
 import { User } from "@project/shared";
 import { JwtService } from "@nestjs/jwt";
 import { AmqpConnection } from "@golevelup/nestjs-rabbitmq";
 import { CreateSubscriberDto } from "../../dto/create-subscriber.dto";
+import { RefreshTokenService } from "../refresh-token/refresh-token.service";
 
 @Injectable()
 export class UserService {
@@ -23,7 +24,7 @@ export class UserService {
 		private readonly databaseConfig: ConfigType<typeof dbConfig>,
 		private readonly jwtService: JwtService,
 		@Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
-
+		private readonly refreshTokenService: RefreshTokenService,
 		private readonly rabbitClient: AmqpConnection,
 		@Inject(rabbitConfig.KEY)
 		private readonly rabbiOptions: ConfigType<typeof rabbitConfig>,
@@ -69,15 +70,13 @@ export class UserService {
 	}
 
 	public async createUserToken(user: User): Promise<Token> {
-		const payload: TokenPayload = {
-			id: user.id,
-			email: user.email,
-			name: user.name,
-		};
+		const accessTokenPayload = createJWTPayload(user);
+		const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
+		await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
 
 		try {
-			const accessToken = await this.jwtService.signAsync(payload);
-			const refreshToken = await this.jwtService.signAsync(payload, {
+			const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+			const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
 				secret: this.jwtOptions.refreshTokenSecret,
 				expiresIn: this.jwtOptions.refreshTokenExpiresIn
 			});

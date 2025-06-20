@@ -16,7 +16,7 @@ export class RefreshTokenRepository extends BaseMongoRepository<RefreshTokenEnti
 	}
 
 	public async deleteByTokenId(tokenId: string) {
-		return this.model
+		this.model
 			.deleteOne({ tokenId })
 			.exec();
 	}

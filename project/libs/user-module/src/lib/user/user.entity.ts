@@ -1,6 +1,5 @@
-import { User } from "./user.interface";
 import { SALT_ROUNDS } from "./user.constant";
-import { Entity, StorableEntity } from '@project/shared';
+import { Entity, StorableEntity, User } from '@project/shared';
 import { compare, genSalt, hash } from 'bcrypt';
 
 export class UserEntity extends Entity implements StorableEntity<User> {

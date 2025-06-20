@@ -2,7 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../lib/user/user.service';
-import { User } from '../lib/user/user.interface';
+import { User } from '@project/shared';
 
 const USERNAME_FIELD_NAME = 'email';
 

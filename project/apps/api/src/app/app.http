@@ -1,0 +1,32 @@
+# Login user by email and password
+POST http://localhost:4000/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "sam@mail.ru",
+  "password": "123456"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:4000/api/users/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwidG9rZW5JZCI6IjIwNzI2MWE5LTM3OTctNDUyMS04OGFlLWEzNThiNzMzYmM2MSIsImlhdCI6MTc1MDM2ODE0NSwiZXhwIjoxNzUyOTYwMTQ1fQ.YT0sBXWpMdnfWUAEoIuuj8cT3SVA0Z64MXRo2U1Bs74
+
+###
+
+
+# Create a new post
+POST http://localhost:4000/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwMzY4Mjg2LCJleHAiOjE3NTAzNzEyODZ9.vaH21Oss6oGHnIvWC8pJKjwUpA3Zh1UoN9A2MZTSS8A
+Content-Type: application/json
+
+{
+  "url": "Пушкин",
+  "author": "Пушкин",
+  "quote": "Текст какой-нибудь цитаты",
+  "typeId": "5e50ecef-6ba3-4a58-8c30-0159943157fd",
+  "userId": "658170cbb954e9f5b905ccf4",
+  "isPublished": true
+}
+###
