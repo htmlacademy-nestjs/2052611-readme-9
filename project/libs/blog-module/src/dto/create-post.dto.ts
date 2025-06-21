@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayNotEmpty, IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength, ValidateIf } from "class-validator";
+import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsBoolean, IsDefined, IsEnum, IsMongoId, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength, ValidateIf } from "class-validator";
 import { PostTypeUUID } from "../lib/post-type/post-type.constant";
 
 export class CreatePostDto {
@@ -32,6 +32,7 @@ export class CreatePostDto {
 	@IsOptional()
 	@IsArray()
 	@ArrayNotEmpty()
+	@ArrayMaxSize(8)
 	@IsUUID('all', { each: true })
 	public tags?: string[];
 

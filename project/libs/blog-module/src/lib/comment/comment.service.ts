@@ -23,7 +23,7 @@ export class CommentService {
 		this.repository.deleteById(id);
 	}
 
-	public async findByPost(postId: string) {
-		return this.repository.findByPostId(postId);
+	public async findByPost(postId: string): Promise<CommentEntity[]> {
+		return await this.repository.findByPostId(postId);
 	}
 }

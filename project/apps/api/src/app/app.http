@@ -11,22 +11,55 @@ Content-Type: application/json
 
 # Get new JWT pair
 POST http://localhost:4000/api/users/refresh HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwidG9rZW5JZCI6IjIwNzI2MWE5LTM3OTctNDUyMS04OGFlLWEzNThiNzMzYmM2MSIsImlhdCI6MTc1MDM2ODE0NSwiZXhwIjoxNzUyOTYwMTQ1fQ.YT0sBXWpMdnfWUAEoIuuj8cT3SVA0Z64MXRo2U1Bs74
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwidG9rZW5JZCI6IjFmYjY1YmM1LTkyODMtNDEyNC1iYjA3LTIxN2IxYjZiNTRiOSIsImlhdCI6MTc1MDQxMTcwNSwiZXhwIjoxNzUzMDAzNzA1fQ.bIws9wvpwDdC_QqTaNSFUTjck9v0NyobwO5pnJqOGJ4
 
 ###
 
-
+# ===== POSTS =====
 # Create a new post
 POST http://localhost:4000/api/posts HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwMzY4Mjg2LCJleHAiOjE3NTAzNzEyODZ9.vaH21Oss6oGHnIvWC8pJKjwUpA3Zh1UoN9A2MZTSS8A
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwNTA0ODM1LCJleHAiOjE3NTA1MDc4MzV9.fJPFZpCSdNvT6GiJNJV5KYZ3PHHs8Ry-Z7TvCgfSaSc
 Content-Type: application/json
 
 {
-  "url": "Пушкин",
   "author": "Пушкин",
   "quote": "Текст какой-нибудь цитаты",
   "typeId": "5e50ecef-6ba3-4a58-8c30-0159943157fd",
-  "userId": "658170cbb954e9f5b905ccf4",
   "isPublished": true
 }
+###
+
+# Get post by id
+GET http://localhost:4000/api/posts/aa995e71-b2c1-4bb0-addd-b8723cf63369 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwNTA0ODM1LCJleHAiOjE3NTA1MDc4MzV9.fJPFZpCSdNvT6GiJNJV5KYZ3PHHs8Ry-Z7TvCgfSaSc
+Content-Type: application/json
+
+###
+
+# Update post by id
+PATCH http://localhost:4000/api/posts/aa995e71-b2c1-4bb0-addd-b8723cf63369 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwNTA0ODM1LCJleHAiOjE3NTA1MDc4MzV9.fJPFZpCSdNvT6GiJNJV5KYZ3PHHs8Ry-Z7TvCgfSaSc
+Content-Type: application/json
+
+{
+  "author": "Пушкин"
+}
+###
+
+# ===== TAGS =====
+# Create a new tag
+POST http://localhost:4000/api/tags HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwNDYxNzQwLCJleHAiOjE3NTA0NjQ3NDB9.GCxE-Zm0KQqUf3wd2HfrW5G2h-t-Tz-pm0XcmHyGtXc
+Content-Type: application/json
+
+{
+  "name": "Boring7"
+}
+###
+
+# Get all tags
+GET http://localhost:4000/api/tags HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NGVmYTc4YWQ1NjgzOTZmMDM1NTEzNyIsImVtYWlsIjoic2FtQG1haWwucnUiLCJuYW1lIjoiU2FtIiwiaWF0IjoxNzUwNDYxNzQwLCJleHAiOjE3NTA0NjQ3NDB9.GCxE-Zm0KQqUf3wd2HfrW5G2h-t-Tz-pm0XcmHyGtXc
+Content-Type: application/json
+
 ###

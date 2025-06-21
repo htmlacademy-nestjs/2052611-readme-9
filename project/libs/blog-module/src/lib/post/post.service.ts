@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostRepository } from "./post.repository";
@@ -15,8 +15,12 @@ export class BlogPostService {
 
 	public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
 		const newEntity = new BlogPostEntity(dto);
-		this.repository.save(newEntity);
+		await this.repository.save(newEntity);
 		return newEntity;
+	}
+
+	public async saveTags(tags: string[], postId: string) {
+		await this.repository.saveTags(tags, postId);
 	}
 
 	public async delete(id: string) {
@@ -43,36 +47,26 @@ export class BlogPostService {
 		}
 	}
 
-	public async updatePost(id: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
-		const existsPost = await this.repository.findById(id);
-		let isSameTags = true;
+	public async update(id: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
+		const existingPost = await this.repository.findById(id);
 		let hasChanges = false;
 
+		if (existingPost.userId !== dto.userId) {
+			throw new ConflictException(`Post was created by user ${existingPost.userId}, it can't be edited by user ${dto.userId}`)
+		}
+
 		for (const [key, value] of Object.entries(dto)) {
-			if (value !== undefined && key !== 'tags' && existsPost[key] !== value) {
-				existsPost[key] = value;
+			if (value !== undefined && existingPost[key] !== value) {
+				existingPost[key] = value;
 				hasChanges = true;
 			}
-
-			if (key === 'tags' && value) {
-				const currentIds = existsPost.tags;
-				isSameTags = currentIds.length === value.length &&
-					currentIds.some((el) => value.includes(el));
-
-				if (!isSameTags) {
-					await this.repository.saveTags(value, id);
-				}
-			}
-
 		}
 
-		if (isSameTags && !hasChanges) {
-			return existsPost;
+		if (!hasChanges) {
+			return existingPost;
 		}
-
-		await this.repository.update(existsPost);
-
-		return existsPost;
+		await this.repository.update(existingPost);
+		return existingPost;
 	}
 
 	public async getPost(id: string): Promise<BlogPostEntity> {

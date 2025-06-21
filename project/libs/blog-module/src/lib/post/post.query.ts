@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsIn, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { SortDirection } from '@project/shared';
 import {
 	DEFAULT_POST_COUNT_LIMIT,
@@ -14,10 +14,9 @@ export class BlogPostQuery {
 	@IsOptional()
 	public limit = DEFAULT_POST_COUNT_LIMIT;
 
-	@IsUUID('all', { each: true })
-	@IsArray()
+	@IsUUID()
 	@IsOptional()
-	public categories?: string[];
+	public tag?: string;
 
 	@IsIn(Object.values(SortDirection))
 	@IsOptional()

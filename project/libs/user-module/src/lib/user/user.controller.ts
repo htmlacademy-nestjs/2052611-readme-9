@@ -47,17 +47,9 @@ export class UserController {
 	@UseGuards(LocalAuthGuard)
 	@Post('login')
 	public async login(@Req() { user }: RequestWithUser) {
-		console.log(`user email = ${user.email}`);
 		const userToken = await this.service.createUserToken(user);
 		return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
 	}
-	/*
-	public async login(@Body() dto: LoginUserDto) {
-		console.log(`user email = ${dto.email}`)
-		const user = await this.service.verify(dto);
-		const userToken = await this.service.createUserToken(user);
-		return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
-	}*/
 
 	@ApiResponse({
 		type: UserRdo,
@@ -83,14 +75,12 @@ export class UserController {
 		description: 'Get a new access/refresh tokens'
 	})
 	public async refreshToken(@Req() { user }: RequestWithUser) {
-		console.log('users refresh');
 		return this.service.createUserToken(user);
 	}
 
 	@UseGuards(JwtAuthGuard)
 	@Post('check')
 	public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
-		console.log('users check');
 		return payload;
 	}
 }

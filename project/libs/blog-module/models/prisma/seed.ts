@@ -71,11 +71,11 @@ function getTags() {
 	return [
 		{
 			id: FIRST_TAG_UUID,
-			name: 'Funny'
+			name: 'funny'
 		},
 		{
 			id: SECOND_TAG_UUID,
-			name: 'Sad'
+			name: 'sad'
 		}
 	]
 }

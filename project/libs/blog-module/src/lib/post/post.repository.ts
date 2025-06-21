@@ -5,6 +5,8 @@ import { BlogPostEntityFactory } from "./post.factory";
 import { BlogPost } from "./post.interface";
 import { Prisma } from '@prisma/client';
 import { BlogPostQuery } from "./post.query";
+import { TagEntity } from "../tag/tag.entity";
+import { Tag } from "../tag/tag.inteface";
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, BlogPost> {
@@ -24,24 +26,23 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 	public async save(entity: BlogPostEntity): Promise<void> {
 		const pojo = entity.toPOJO();
 		const record = await this.client.post.create({
-			data: {
-				...pojo
-			}
+			data: pojo
 		});
 		entity.id = record.id;
-		this.saveTags(pojo.tags, record.id);
 	}
 
-	public async saveTags(tags: string[], postId: string): Promise<void> {
-		if (tags.length > 0) {
+	public async saveTags(ids: string[], postId: string): Promise<void> {
+		if (ids?.length > 0) {
+			const uniqueIds = [...new Set(ids)];
+			const data = uniqueIds.map(el => {
+				return {
+					postId: postId,
+					tagId: el
+				}
+			});
 			await this.client.postTags.createMany({
-				data: tags.map(el => {
-					return {
-						postId: postId,
-						tagId: el
-					}
-				})
-			})
+				data: data
+			});
 		}
 	}
 

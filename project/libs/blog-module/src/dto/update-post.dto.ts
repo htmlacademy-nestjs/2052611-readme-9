@@ -1,22 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ArrayNotEmpty, IsArray, IsBoolean, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength } from "class-validator";
+import { IsBoolean, IsMongoId, IsOptional, IsString, IsUrl, MaxLength, MinLength } from "class-validator";
 
 export class UpdatePostDto {
+	@ApiProperty({
+		description: 'ID of user',
+		example: '658170cbb954e9f5b905ccf4'
+	})
+	@IsMongoId()
+	public userId: string;
+
 	@ApiProperty({
 		description: 'Status of publication',
 		example: "true"
 	})
+	@IsOptional()
 	@IsBoolean()
-	public isPublished: boolean;
-
-	@ApiProperty({
-		description: "Array of tag's IDs",
-		example: "['f733b017-cc04-4dfc-909d-debecf7b418d']"
-	})
-	@IsArray()
-	@ArrayNotEmpty()
-	@IsUUID('all', { each: true })
-	public tags?: string[];
+	public isPublished?: boolean;
 
 	@ApiProperty({
 		description: "Title (for 'text' and 'video' post types)",

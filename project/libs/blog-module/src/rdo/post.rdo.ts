@@ -21,14 +21,6 @@ export class BlogPostRdo {
 	public postType: PostTypeRdo;
 
 	@Expose()
-	@Type(() => TagRdo)
-	public tags: TagRdo[];
-
-	@Expose()
-	@Type(() => CommentRdo)
-	public comments: CommentRdo[];
-
-	@Expose()
 	public author?: string;
 
 	@Expose()
@@ -54,4 +46,15 @@ export class BlogPostRdo {
 
 	@Expose()
 	public url?: string;
+
+	@Expose()
+	@Type(() => TagRdo)
+	public tags: TagRdo[];
+
+	@Expose()
+	@Type(() => CommentRdo)
+	public comments: CommentRdo[];
+
+	@Expose()
+	public likes: number;
 }
