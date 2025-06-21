@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsAlphanumeric, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateTagDto {
 	@ApiProperty({
@@ -7,5 +7,8 @@ export class CreateTagDto {
 		example: "Text"
 	})
 	@IsString()
+	@IsAlphanumeric()
+	@MinLength(3)
+	@MaxLength(10)
 	public name: string;
 }

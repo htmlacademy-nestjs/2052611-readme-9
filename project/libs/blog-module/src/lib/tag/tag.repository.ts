@@ -14,11 +14,13 @@ export class TagRepository extends BasePostgresRepository<TagEntity, Tag> {
 	public async save(entity: TagEntity): Promise<void> {
 		const pojo = entity.toPOJO();
 		const record = await this.client.tag.create({
-			data: {
-				...pojo
-			}
+			data: pojo
 		});
 		entity.id = record.id;
+	}
+
+	public async getAll(): Promise<Tag[]> {
+		return await this.client.tag.findMany();
 	}
 
 	public async findByName(name: string): Promise<String> {
@@ -33,17 +35,27 @@ export class TagRepository extends BasePostgresRepository<TagEntity, Tag> {
 		return record.id;
 	}
 
-	public async getAll(): Promise<Tag[]> {
-		return await this.client.tag.findMany();
+	public async findByIds(ids: string[]): Promise<TagEntity[]> {
+		const records = await this.client.tag.findMany({
+			where: {
+				id: { in: ids }
+			}
+		});
+		return records.map((record: Tag) => this.createEntityFromDocument(record));
 	}
 
-	public async checkByIds(ids: string[]): Promise<Boolean> {
-		const records = await this.client.tag.findMany();
-		ids.forEach(el => {
-			if (!records.find(tag => tag.id === el)) {
-				return false;
+	public async findByPost(postId: string): Promise<TagEntity[]> {
+		const records = await this.client.postTags.findMany({
+			where: {
+				postId
 			}
-		})
-		return true;
+		});
+		const tagIds = records.map(el => el.tagId);
+		const tags = await this.client.tag.findMany({
+			where: {
+				id: { in: tagIds }
+			}
+		});
+		return tags.map((el: Tag) => this.createEntityFromDocument(el));
 	}
 }

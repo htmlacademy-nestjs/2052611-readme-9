@@ -6,7 +6,7 @@ export class TagEntity extends Entity implements StorableEntity<Tag> {
 
 	constructor(tag: Tag) {
 		super();
-		this.id = tag.id ?? '';
+		this.id = tag.id;
 		this.name = tag.name;
 	}
 

@@ -5,7 +5,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 	public typeId: string;
 	public userId: string;
 	public isPublished: boolean;
-	public tags?: string[];
 	public title?: string;
 	public url?: string;
 	public preview?: string;
@@ -18,11 +17,10 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 
 	constructor(post: BlogPost) {
 		super();
-		this.id = post?.id ?? '';
+		this.id = post.id;
 		this.typeId = post.typeId;
 		this.userId = post.userId;
 		this.isPublished = post.isPublished;
-		this.tags = post.tags ?? [];
 		this.title = post.title;
 		this.url = post.url;
 		this.preview = post.preview;
@@ -40,7 +38,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 			typeId: this.typeId,
 			userId: this.userId,
 			isPublished: this.isPublished,
-			tags: this.tags,
 			title: this.title,
 			url: this.url,
 			preview: this.preview,

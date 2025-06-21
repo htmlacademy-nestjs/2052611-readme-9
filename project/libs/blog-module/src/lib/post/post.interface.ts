@@ -1,3 +1,5 @@
+import { Tag } from "../tag/tag.inteface";
+
 export interface BlogPost {
 	id?: string,
 	typeId: string,

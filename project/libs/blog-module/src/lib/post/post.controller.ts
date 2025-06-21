@@ -7,12 +7,18 @@ import { BlogPostQuery } from "./post.query";
 import { PostWithPaginationRdo } from "../../rdo/post-with-pagination.rdo";
 import { UpdatePostDto } from "../../dto/update-post.dto";
 import { BlogPostRdo } from "../../rdo/post.rdo";
+import { TagService } from "../tag/tag.service";
+import { CommentService } from "../comment/comment.service";
+import { LikeService } from "../like/like.service";
 
 @ApiTags('Posts')
 @Controller()
 export class BlogPostController {
 	constructor(
-		private readonly service: BlogPostService
+		private readonly service: BlogPostService,
+		private readonly tagService: TagService,
+		private readonly commentService: CommentService,
+		private readonly likeService: LikeService
 	) { }
 
 	@ApiQuery({
@@ -31,13 +37,23 @@ export class BlogPostController {
 	@Get('posts/:id')
 	public async getPost(@Param('id') id: string) {
 		const record = await this.service.getPost(id);
-		return fillDto(BlogPostRdo, record.toPOJO());
+		const tagEntities = await this.tagService.findByPost(id);
+		const commentEntities = await this.commentService.findByPost(id);
+		const likes = await this.likeService.countByPost(id);
+		return fillDto(BlogPostRdo, {
+			...record.toPOJO(),
+			tags: tagEntities.map(el => el.toPOJO()),
+			comments: commentEntities.map(el => el.toPOJO()),
+			likes: likes
+		});
 	}
 
 	@Post('posts/')
 	public async create(@Body() dto: CreatePostDto) {
 		const newPost = await this.service.create(dto);
-		return fillDto(BlogPostRdo, newPost.toPOJO());
+		const tagEntities = await this.tagService.findByIds(dto.tags);
+		await this.service.saveTags(dto.tags, newPost.id);
+		return fillDto(BlogPostRdo, { ...newPost.toPOJO(), tags: tagEntities.map(el => el.toPOJO()) });
 	}
 
 	@Delete('posts/:id')
@@ -45,10 +61,11 @@ export class BlogPostController {
 		this.service.delete(id);
 	}
 
-	@Patch('/:id')
+	@Patch('posts/:id')
 	public async update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
-		const updatedPost = await this.service.updatePost(id, dto);
-		return fillDto(BlogPostRdo, updatedPost.toPOJO());
+		const updatedPost = await this.service.update(id, dto);
+		const tagEntities = await this.tagService.findByPost(id);
+		return fillDto(BlogPostRdo, { ...updatedPost.toPOJO(), tags: tagEntities.map(el => el.toPOJO()) });
 	}
 
 	@Post('posts/:id/repost')

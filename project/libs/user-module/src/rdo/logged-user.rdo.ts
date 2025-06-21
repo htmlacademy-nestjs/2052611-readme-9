@@ -17,9 +17,14 @@ export class LoggedUserRdo {
 	public email: string;
 
 	@ApiProperty({
-		description: 'accessToken',
-		example: '123456'
+		description: 'Access token'
 	})
 	@Expose()
 	public accessToken: string;
+
+	@ApiProperty({
+		description: 'Refresh token',
+	})
+	@Expose()
+	public refreshToken: string;
 }
