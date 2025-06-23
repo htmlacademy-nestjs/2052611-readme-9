@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BasePostgresRepository, PrismaClientService } from '@project/shared';
 import { LikeEntity } from './like.entity';
 import { LikeEntityFactory } from './like.factory';
@@ -10,7 +10,7 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
 		super(entityFactory, client);
 	}
 
-	public async countByPost(postId: string): Promise<Number> {
+	public async countByPostId(postId: string): Promise<Number> {
 		return await this.client.like.count({
 			where: {
 				postId
@@ -19,13 +19,22 @@ export class LikeRepository extends BasePostgresRepository<LikeEntity, Like> {
 	}
 
 	public async findByPostAndUser(postId: string, userId: string): Promise<Boolean> {
-		const record = await this.client.like.findFirst({
+		const existingPost = await this.client.post.findFirst({
 			where: {
-				postId,
-				userId
+				id: postId
 			}
-		})
-		return record ? true : false;
+		});
+		if (existingPost) {
+			const record = await this.client.like.findFirst({
+				where: {
+					postId,
+					userId
+				}
+			})
+			return record ? true : false;
+		} else {
+			throw new NotFoundException(`Post with id="${postId}" does not exists`);
+		}
 	}
 
 	public async save(entity: LikeEntity): Promise<void> {

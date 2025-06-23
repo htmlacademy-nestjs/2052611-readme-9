@@ -8,6 +8,7 @@ export { EntityFactory } from './lib/core/entity.factory.js';
 export { StorableEntity } from './lib/core/storable-entity.interface.js';
 export { PaginationResult } from './lib/core/pagination.interface.js';
 export { SortDirection } from './lib/core/sort-direction.interface.js';
+export { DEFAULT_PAGE_COUNT, DEFAULT_SORT_DIRECTION } from './lib/core/pagination.constant.js';
 export { Token } from './lib/core/token.interface.js';
 export { TokenPayload } from './lib/core/token-payload.interface.js';
 export { JwtToken } from './lib/core/jwt-token.interface.js';

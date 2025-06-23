@@ -1,5 +1,8 @@
-import { SortDirection } from '@project/shared';
-
-export const DEFAULT_POST_COUNT_LIMIT = 10;
-export const DEFAULT_SORT_DIRECTION = SortDirection.Desc;
-export const DEFAULT_PAGE_COUNT = 1;
+export enum BlogPostSortBy {
+	Date = 'date',
+	Likes = 'likes',
+	Comments = 'comments'
+};
+export const DEFAULT_POST_SORT_BY = BlogPostSortBy.Date;
+export const DEFAULT_POST_COUNT_LIMIT = 25;
+export const DEFAULT_POST_PUBLICATION_STATUS = true;

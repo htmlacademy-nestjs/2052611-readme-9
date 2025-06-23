@@ -14,12 +14,16 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 	public file?: string;
 	public description?: string;
 	public originalPostId?: string;
+	public createdAt?: Date;
+	public updatedAt?: Date;
 
 	constructor(post: BlogPost) {
 		super();
 		this.id = post.id;
 		this.typeId = post.typeId;
 		this.userId = post.userId;
+		this.createdAt = post.createdAt;
+		this.updatedAt = post.updatedAt;
 		this.isPublished = post.isPublished;
 		this.title = post.title;
 		this.url = post.url;
@@ -37,6 +41,8 @@ export class BlogPostEntity extends Entity implements StorableEntity<BlogPost> {
 			id: this.id,
 			typeId: this.typeId,
 			userId: this.userId,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
 			isPublished: this.isPublished,
 			title: this.title,
 			url: this.url,

@@ -1,8 +1,9 @@
-import { BasePostgresRepository, PrismaClientService } from "@project/shared";
+import { BasePostgresRepository, PaginationResult, PrismaClientService } from "@project/shared";
 import { CommentEntity } from "./comment.entity";
 import { CommentEntityFactory } from "./comment.factory";
 import { Comment } from "./comment.interface";
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { CommentQuery } from "./comment.query";
 
 @Injectable()
 export class CommentRepository extends BasePostgresRepository<CommentEntity, Comment> {
@@ -29,7 +30,7 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
 		});
 
 		if (!document) {
-			throw new NotFoundException(`Comment with id ${id} not found.`);
+			return null;
 		}
 
 		return this.createEntityFromDocument(document);
@@ -43,13 +44,29 @@ export class CommentRepository extends BasePostgresRepository<CommentEntity, Com
 		});
 	}
 
-	public async findByPostId(postId: string): Promise<CommentEntity[]> {
+	public async countByPostId(postId: string): Promise<number> {
+		return this.client.comment.count({ where: { postId } });
+	}
+
+	public async findByPostId(postId: string, query?: CommentQuery): Promise<PaginationResult<CommentEntity>> {
+		const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+		const take = query?.limit ?? 1;
+		const commentCount = await this.countByPostId(postId);
+		const calculateCommentsPage = Math.ceil(commentCount / take)
+
 		const records = await this.client.comment.findMany({
-			where: {
-				postId
-			}
+			where: { postId },
+			orderBy: { createdAt: 'desc' },
+			skip,
+			take
 		});
 
-		return records.map(record => this.createEntityFromDocument(record))
+		return {
+			entities: records.map((record) => this.createEntityFromDocument(record)),
+			currentPage: query?.page,
+			totalPages: calculateCommentsPage,
+			itemsPerPage: take,
+			totalItems: commentCount
+		}
 	}
 }

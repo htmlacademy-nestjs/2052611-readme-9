@@ -1,9 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
 import { CreateCommentDto } from "../../dto/create-comment.dto.js";
 import { Comment } from "./comment.interface";
 import { CommentService } from "./comment.service";
 import { fillDto } from "@project/shared";
-import { CommentRdo } from "../../rdo/comment.rdo.js";
+import { DeleteByUserDto } from "../../dto/delete-by-user.dto.js";
+import { ApiParam } from "@nestjs/swagger";
+import { CommentQuery } from "./comment.query.js";
+import { CommentWithPaginationRdo } from "../../rdo/comment-with-pagination.rdo.js";
 
 @Controller()
 export class CommentController {
@@ -11,20 +14,42 @@ export class CommentController {
 		private readonly service: CommentService
 	) { }
 
-	@Post('comments/')
-	public async create(@Body() dto: CreateCommentDto): Promise<Comment> {
-		const newComment = await this.service.create(dto);
+	@ApiParam({
+		name: 'postId',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
+	@Post('posts/:postId/comments')
+	public async create(@Param('postId') postId: string, @Body() dto: CreateCommentDto): Promise<Comment> {
+		const newComment = await this.service.create(postId, dto);
 		return newComment.toPOJO();
 	}
 
+	@ApiParam({
+		name: 'postId',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
 	@Delete('comments/:id')
-	public async delete(@Param('id') id: string) {
-		this.service.delete(id);
+	public async delete(@Param('id') id: string, @Body() dto: DeleteByUserDto) {
+		await this.service.delete(id, dto);
 	}
 
+	@ApiParam({
+		name: 'postId',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
 	@Get('posts/:postId/comments')
-	public async findByPost(@Param('postId') postId: string) {
-		const comments = await this.service.findByPost(postId);
-		return fillDto(CommentRdo, comments.map(el => el.toPOJO()));
+	public async findByPost(@Param('postId') postId: string, @Query() query: CommentQuery) {
+		const commentsWithPagination = await this.service.findByPost(postId, query);
+		const result = {
+			...commentsWithPagination,
+			entities: commentsWithPagination.entities.map((el) => el.toPOJO()),
+		}
+		return fillDto(CommentWithPaginationRdo, result);
 	}
 }

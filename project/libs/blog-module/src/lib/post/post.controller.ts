@@ -2,65 +2,89 @@ import { Body, Controller, Delete, Param, Post, Query, Get, Patch } from "@nestj
 import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostService } from "./post.service";
 import { fillDto } from "@project/shared";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiParam, ApiTags } from "@nestjs/swagger";
 import { BlogPostQuery } from "./post.query";
 import { PostWithPaginationRdo } from "../../rdo/post-with-pagination.rdo";
 import { UpdatePostDto } from "../../dto/update-post.dto";
 import { BlogPostRdo } from "../../rdo/post.rdo";
 import { TagService } from "../tag/tag.service";
-import { CommentService } from "../comment/comment.service";
-import { LikeService } from "../like/like.service";
+import { DeleteByUserDto } from "../../dto/delete-by-user.dto";
 
 @ApiTags('Posts')
 @Controller()
 export class BlogPostController {
 	constructor(
 		private readonly service: BlogPostService,
-		private readonly tagService: TagService,
-		private readonly commentService: CommentService,
-		private readonly likeService: LikeService
+		private readonly tagService: TagService
 	) { }
 
-	@ApiQuery({
-		type: BlogPostQuery
-	})
 	@Get('posts/')
-	public async getAll(@Query() query: BlogPostQuery) {
-		const postsWithPagination = await this.service.getAllPosts(query);
+	public async find(@Query() query: BlogPostQuery) {
+		const postsWithPagination = await this.service.find(query);
+		const entities = postsWithPagination.entities;
+		const posts = [];
+		for (let item of entities) {
+			const info = await this.service.addPostInfo(item);
+			posts.push({
+				...item.toPOJO(),
+				...info
+			});
+		}
 		const result = {
 			...postsWithPagination,
-			entities: postsWithPagination.entities.map((post) => post.toPOJO()),
+			entities: posts
 		}
 		return fillDto(PostWithPaginationRdo, result);
 	}
 
+	@ApiParam({
+		name: 'id',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
 	@Get('posts/:id')
-	public async getPost(@Param('id') id: string) {
-		const record = await this.service.getPost(id);
-		const tagEntities = await this.tagService.findByPost(id);
-		const commentEntities = await this.commentService.findByPost(id);
-		const likes = await this.likeService.countByPost(id);
+	public async findById(@Param('id') id: string) {
+		const record = await this.service.findById(id);
+		const info = await this.service.addPostInfo(record);
 		return fillDto(BlogPostRdo, {
 			...record.toPOJO(),
-			tags: tagEntities.map(el => el.toPOJO()),
-			comments: commentEntities.map(el => el.toPOJO()),
-			likes: likes
+			...info
 		});
 	}
 
+	@ApiBody({
+		type: CreatePostDto
+	})
 	@Post('posts/')
 	public async create(@Body() dto: CreatePostDto) {
 		const newPost = await this.service.create(dto);
-		const tagEntities = await this.tagService.findByIds(dto.tags);
-		await this.service.saveTags(dto.tags, newPost.id);
-		return fillDto(BlogPostRdo, { ...newPost.toPOJO(), tags: tagEntities.map(el => el.toPOJO()) });
+		await this.tagService.savePostTags(dto.tags, newPost.id);
+
+		const info = await this.service.addPostInfo(newPost);
+		return fillDto(BlogPostRdo, {
+			...newPost.toPOJO(),
+			...info
+		});
 	}
 
+	@ApiParam({
+		name: 'id',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
 	@Delete('posts/:id')
-	public async delete(@Param('id') id: string) {
-		this.service.delete(id);
+	public async delete(@Param('id') id: string, @Body() dto: DeleteByUserDto) {
+		await this.service.delete(id, dto);
 	}
 
+	@ApiParam({
+		name: 'id',
+		description: 'ID of post',
+		type: 'string',
+		format: 'uuid'
+	})
 	@Patch('posts/:id')
 	public async update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
 		const updatedPost = await this.service.update(id, dto);
@@ -68,9 +92,10 @@ export class BlogPostController {
 		return fillDto(BlogPostRdo, { ...updatedPost.toPOJO(), tags: tagEntities.map(el => el.toPOJO()) });
 	}
 
-	@Post('posts/:id/repost')
-	public async repost(@Param('id') id: string, @Query('userId') userId: string) {
-		this.service.repost(id, userId);
+	@Get('users/:id/posts')
+	public async countByUserId(@Param('id') id: string) {
+		return {
+			"numberOfPosts": await this.service.countByUserId(id)
+		}
 	}
-
 }

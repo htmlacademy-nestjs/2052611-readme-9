@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { BasePostgresRepository, PaginationResult, PrismaClientService } from "@project/shared";
+import { BasePostgresRepository, DEFAULT_SORT_DIRECTION, PaginationResult, PrismaClientService, SortDirection } from "@project/shared";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostEntityFactory } from "./post.factory";
 import { BlogPost } from "./post.interface";
 import { Prisma } from '@prisma/client';
 import { BlogPostQuery } from "./post.query";
-import { TagEntity } from "../tag/tag.entity";
-import { Tag } from "../tag/tag.inteface";
+import { BlogPostSortBy, DEFAULT_POST_PUBLICATION_STATUS, DEFAULT_POST_SORT_BY } from "./post.constant";
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, BlogPost> {
@@ -31,21 +30,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 		entity.id = record.id;
 	}
 
-	public async saveTags(ids: string[], postId: string): Promise<void> {
-		if (ids?.length > 0) {
-			const uniqueIds = [...new Set(ids)];
-			const data = uniqueIds.map(el => {
-				return {
-					postId: postId,
-					tagId: el
-				}
-			});
-			await this.client.postTags.createMany({
-				data: data
-			});
-		}
-	}
-
 	public async deleteById(id: string): Promise<void> {
 		await this.client.post.delete({
 			where: {
@@ -66,7 +50,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 		});
 
 		if (!document) {
-			throw new NotFoundException(`Post with id ${id} not found.`);
+			return null;
 		}
 
 		return this.createEntityFromDocument(document);
@@ -77,6 +61,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 		await this.client.post.update({
 			where: { id: entity.id },
 			data: {
+				isPublished: pojo.isPublished,
 				author: pojo.author,
 				description: pojo.description,
 				file: pojo.file,
@@ -86,10 +71,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 				text: pojo.text,
 				title: pojo.title,
 				url: pojo.url
-			},
-			include: {
-				PostTags: true,
-				Comment: true,
 			}
 		});
 	}
@@ -97,16 +78,57 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 	public async find(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
 		const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
 		const take = query?.limit;
-		const where: Prisma.PostWhereInput = {};
 		const orderBy: Prisma.PostOrderByWithRelationInput = {};
+		const sortBy = query?.sortBy || DEFAULT_POST_SORT_BY;
+		const sortDirection = query?.sortDirection || DEFAULT_SORT_DIRECTION;
+		const userId = query?.userId;
+		const isPublished = query?.isPublished ?? DEFAULT_POST_PUBLICATION_STATUS;
+		let where: Prisma.PostWhereInput = {
+			isPublished
+		};
 
-		if (query?.sortDirection) {
-			orderBy.createdAt = query.sortDirection;
+		if (sortBy === BlogPostSortBy.Date) {
+			orderBy.createdAt = sortDirection;
+		} else if (sortBy === BlogPostSortBy.Comments) {
+			orderBy.Comment = {
+				_count: sortDirection
+			}
+		} else if (sortBy === BlogPostSortBy.Likes) {
+			orderBy.Like = {
+				_count: sortDirection
+			}
+		}
+
+		if (query?.tag) {
+			const postsWithTag = await this.client.postTags.findMany({
+				where: {
+					tagId: query.tag
+				}
+			});
+			if (postsWithTag.length > 0) {
+				where.id = { in: postsWithTag.map(el => el.postId) };
+			};
+		}
+
+		if (query?.postType) {
+			where.typeId = query.postType;
+		}
+
+		if (userId) {
+			where.userId = userId;
 		}
 
 		const [records, postCount] = await Promise.all([
 			this.client.post.findMany({
-				where, orderBy, skip, take
+				where, skip, take, orderBy,
+				include: {
+					_count: {
+						select: {
+							Like: true,
+							Comment: true
+						}
+					}
+				}
 			}),
 			this.getPostCount(where),
 		]);
@@ -118,5 +140,32 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 			itemsPerPage: take,
 			totalItems: postCount,
 		}
+	}
+
+	public async repostsByPostId(postId: string): Promise<BlogPostEntity[]> {
+		const originalPost = await this.client.post.findFirst({
+			where: {
+				id: postId
+			}
+		});
+
+		if (!originalPost) {
+			throw new NotFoundException(`Post with id ${postId} not found.`);
+		}
+
+		const reposts = await this.client.post.findMany({
+			where: {
+				originalPostId: postId
+			},
+			orderBy: {
+				createdAt: SortDirection.Desc
+			}
+		})
+
+		return reposts.map(el => this.createEntityFromDocument(el));
+	}
+
+	public async countByUserId(userId: string): Promise<number> {
+		return await this.client.post.count({ where: { userId } });
 	}
 }

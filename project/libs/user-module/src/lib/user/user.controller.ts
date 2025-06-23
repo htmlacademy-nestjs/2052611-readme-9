@@ -14,7 +14,7 @@ import { RequestWithTokenPayload } from "./request-with-token-payload.interface"
 import { LoginUserDto } from "../../dto/login-user.dto";
 
 @ApiTags('Users')
-@Controller('users')
+@Controller()
 export class UserController {
 	constructor(
 		private readonly service: UserService
@@ -28,7 +28,7 @@ export class UserController {
 		status: HttpStatus.CONFLICT,
 		description: AUTH_USER_EXISTS
 	})
-	@Post('register')
+	@Post('users/register')
 	public async register(@Body() dto: CreateUserDto) {
 		const user = await this.service.register(dto);
 		await this.service.registerSubscriber({ email: user.email, name: user.name });
@@ -45,7 +45,7 @@ export class UserController {
 		description: AUTH_USER_LOGIN_ERROR
 	})
 	@UseGuards(LocalAuthGuard)
-	@Post('login')
+	@Post('users/login')
 	public async login(@Req() { user }: RequestWithUser) {
 		const userToken = await this.service.createUserToken(user);
 		return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken });
@@ -60,26 +60,26 @@ export class UserController {
 		status: HttpStatus.NOT_FOUND,
 		description: AUTH_USER_NOT_FOUND
 	})
-	@UseGuards(JwtAuthGuard)
-	@Get(':id')
+	/*@UseGuards(JwtAuthGuard)*/
+	@Get('users/:id')
 	public async get(@Param('id', MongoIdValidationPipe) id: string) {
 		const user = await this.service.get(id);
 		return user.toPOJO();
 	}
 
 	@UseGuards(JwtRefreshGuard)
-	@Post('refresh')
 	@HttpCode(HttpStatus.OK)
 	@ApiResponse({
 		status: HttpStatus.OK,
 		description: 'Get a new access/refresh tokens'
 	})
+	@Post('users/refresh')
 	public async refreshToken(@Req() { user }: RequestWithUser) {
 		return this.service.createUserToken(user);
 	}
 
 	@UseGuards(JwtAuthGuard)
-	@Post('check')
+	@Post('users/check')
 	public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
 		return payload;
 	}

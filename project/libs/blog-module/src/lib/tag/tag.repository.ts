@@ -58,4 +58,19 @@ export class TagRepository extends BasePostgresRepository<TagEntity, Tag> {
 		});
 		return tags.map((el: Tag) => this.createEntityFromDocument(el));
 	}
+
+	public async savePostTags(ids: string[], postId: string): Promise<void> {
+		if (ids?.length > 0) {
+			const uniqueIds = [...new Set(ids)];
+			const data = uniqueIds.map(el => {
+				return {
+					postId: postId,
+					tagId: el
+				}
+			});
+			await this.client.postTags.createMany({
+				data: data
+			});
+		}
+	}
 }

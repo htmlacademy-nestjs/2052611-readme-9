@@ -1,13 +1,13 @@
 import { Expose } from "class-transformer";
-import { BlogPostRdo } from "./post.rdo";
 import { ApiProperty } from "@nestjs/swagger";
+import { CommentRdo } from "./comment.rdo";
 
-export class PostWithPaginationRdo {
+export class CommentWithPaginationRdo {
 	@ApiProperty({
-		type: [BlogPostRdo]
+		type: [CommentRdo]
 	})
 	@Expose()
-	public entities: BlogPostRdo[];
+	public entities: CommentRdo[];
 
 	@ApiProperty()
 	@Expose()

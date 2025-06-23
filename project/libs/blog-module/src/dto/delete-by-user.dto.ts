@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsMongoId } from "class-validator";
 
-export class CreateLikeDto {
+export class DeleteByUserDto {
 	@ApiProperty({
 		description: 'ID of user',
 		example: '658170cbb954e9f5b905ccf4'
