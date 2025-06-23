@@ -1,9 +1,9 @@
-import { Tag } from "../tag/tag.inteface";
-
 export interface BlogPost {
 	id?: string,
 	typeId: string,
 	userId: string,
+	createdAt?: Date,
+	updatedAt?: Date,
 	isPublished: boolean,
 	tags?: string[],
 	title?: string,

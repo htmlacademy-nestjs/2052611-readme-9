@@ -1,6 +1,7 @@
-import { Controller, Param, Post, Query, Get } from "@nestjs/common";
+import { Controller, Param, Post, Get, Body } from "@nestjs/common";
 import { LikeService } from "./like.service";
 import { ApiTags } from "@nestjs/swagger";
+import { CreateLikeDto } from "../../dto/create-like.dto";
 
 @ApiTags('Posts')
 @Controller()
@@ -10,18 +11,14 @@ export class LikeController {
 	) { }
 
 	@Post('posts/:id/like')
-	public async like(@Param('id') id: string, @Query('userId') userId: string) {
-		const like = {
-			postId: id,
-			userId: userId
-		}
-		await this.service.addOrRemoveLike(like);
+	public async like(@Param('id') id: string, @Body() dto: CreateLikeDto) {
+		await this.service.addOrRemoveLike(id, dto);
 	}
 
 	@Get('posts/:id/like')
-	public async count(@Param('id') id: string) {
+	public async countByPostId(@Param('id') id: string) {
 		return {
-			numberOfLikes: await this.service.countByPost(id)
+			numberOfLikes: await this.service.countByPostId(id)
 		}
 	}
 }

@@ -1,20 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
 
-export class CommentRdo {
+export class RepostRdo {
 	@ApiProperty({
 		type: 'string',
 		format: 'uuid'
 	})
 	@Expose()
 	public id: string;
-
-	@ApiProperty({
-		type: 'string',
-		format: 'uuid'
-	})
-	@Expose()
-	public postId: string;
 
 	@ApiProperty({
 		example: '658170cbb954e9f5b905ccf4'
@@ -28,5 +21,5 @@ export class CommentRdo {
 
 	@ApiProperty()
 	@Expose()
-	public text: string;
+	public updatedAt: Date;
 }

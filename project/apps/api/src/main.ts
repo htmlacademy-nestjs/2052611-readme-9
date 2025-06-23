@@ -18,6 +18,17 @@ async function bootstrap() {
     .setTitle('Blog service')
     .setDescription('Blog service API')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Enter JWT token',
+        in: 'Header'
+      },
+      'authorizationToken'
+    )
     .build();
   app.setGlobalPrefix(GLOBAL_PREFIX);
   const document = SwaggerModule.createDocument(app, config);

@@ -9,17 +9,17 @@ export class LikeService {
 		private readonly repository: LikeRepository
 	) { }
 
-	public async addOrRemoveLike(dto: CreateLikeDto) {
-		const existLike = await this.repository.findByPostAndUser(dto.postId, dto.userId);
-		if (existLike) {
-			this.repository.delete(dto.postId, dto.userId);
+	public async addOrRemoveLike(postId: string, dto: CreateLikeDto) {
+		const record = await this.repository.findByPostAndUser(postId, dto.userId);
+		if (record) {
+			await this.repository.delete(postId, dto.userId);
 		} else {
-			const newEntity = new LikeEntity(dto);
-			this.repository.save(newEntity);
+			const newEntity = new LikeEntity({ ...dto, postId });
+			await this.repository.save(newEntity);
 		}
 	}
 
-	public async countByPost(postId: string): Promise<Number> {
-		return await this.repository.countByPost(postId);
+	public async countByPostId(postId: string): Promise<Number> {
+		return await this.repository.countByPostId(postId);
 	}
 }

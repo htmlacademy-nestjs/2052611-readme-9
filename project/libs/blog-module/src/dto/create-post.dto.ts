@@ -19,8 +19,7 @@ export class CreatePostDto {
 	public userId: string;
 
 	@ApiProperty({
-		description: 'Status of publication',
-		example: "true"
+		description: 'Status of publication'
 	})
 	@IsBoolean()
 	public isPublished: boolean;

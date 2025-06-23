@@ -12,11 +12,12 @@ export class TagService {
 	) { }
 
 	public async create(dto: CreateTagDto): Promise<TagEntity> {
-		const exisTag = await this.repository.findByName(dto.name);
-		if (exisTag) {
+		const name = dto.name.toLowerCase();
+		const tag = await this.repository.findByName(name);
+		if (tag) {
 			throw new ConflictException(TAG_EXISTS);
 		}
-		const newEntity = new TagEntity(dto);
+		const newEntity = new TagEntity({ name: name });
 		await this.repository.save(newEntity);
 		return newEntity;
 	}
@@ -42,4 +43,7 @@ export class TagService {
 		return await this.repository.findByPost(postId);
 	}
 
+	public async savePostTags(tags: string[], postId: string) {
+		await this.repository.savePostTags(tags, postId);
+	}
 }
