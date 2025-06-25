@@ -1,12 +1,12 @@
 import { ConflictException, HttpException, HttpStatus, Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { CreateUserDto } from "../../dto/create-user.dto";
 import { LoginUserDto } from "../../dto/login-user.dto";
-import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from "./user.constant";
+import { AuthErrorMessage } from "./user.constant";
 import { ConfigType } from '@nestjs/config';
 import { dbConfig, jwtConfig, rabbitConfig } from '../user-config';
 import { UserEntity } from "./user.entity";
 import { UserRepository } from "./user.repository";
-import { createJWTPayload, RabbitRouting, Token, TokenPayload } from "@project/shared";
+import { createJWTPayload, RabbitRouting, Token } from "@project/shared";
 import { User } from "@project/shared";
 import { JwtService } from "@nestjs/jwt";
 import { AmqpConnection } from "@golevelup/nestjs-rabbitmq";
@@ -40,7 +40,7 @@ export class UserService {
 		}
 		const existUser = await this.userRepository.findByEmail(email);
 		if (existUser) {
-			throw new ConflictException(AUTH_USER_EXISTS);
+			throw new ConflictException(AuthErrorMessage.UserExists);
 		}
 
 		const newEntity = await new UserEntity(blogUser).setPassword(password);
@@ -53,10 +53,10 @@ export class UserService {
 		const { email, password } = dto;
 		const existUser = await this.userRepository.findByEmail(email);
 		if (!existUser) {
-			throw new NotFoundException(AUTH_USER_NOT_FOUND);
+			throw new NotFoundException(AuthErrorMessage.UserNotFound);
 		}
 		if (!await existUser.comparePassword(password)) {
-			throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+			throw new UnauthorizedException(AuthErrorMessage.WrongPassword);
 		}
 		return existUser;
 	}
@@ -64,7 +64,7 @@ export class UserService {
 	public async get(id: string) {
 		const user = await this.userRepository.findById(id);
 		if (!user) {
-			throw new NotFoundException(AUTH_USER_NOT_FOUND);
+			throw new NotFoundException(AuthErrorMessage.UserNotFound);
 		}
 		return user;
 	}

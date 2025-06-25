@@ -1,10 +1,10 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { SUBSCRIPTION_EMAIL_NOT_VALID, SUBSCRIPTION_NAME_IS_EMPTY } from '../lib/subscriber.constant';
+import { SubscriptionErrorMessage } from '../lib/subscriber.constant';
 
 export class CreateEmailSubscriberDto {
-	@IsEmail({}, { message: SUBSCRIPTION_EMAIL_NOT_VALID })
+	@IsEmail({}, { message: SubscriptionErrorMessage.EmailNotValid })
 	public email: string;
 
-	@IsNotEmpty({ message: SUBSCRIPTION_NAME_IS_EMPTY })
+	@IsNotEmpty({ message: SubscriptionErrorMessage.NameIsEmpty })
 	public name: string;
 }

@@ -1,11 +1,11 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsEnum, IsIn, IsMongoId, IsNumber, IsOptional, IsUUID } from 'class-validator';
+import { IsEnum, IsIn, IsNumber, IsOptional, IsUUID } from 'class-validator';
 import { DEFAULT_PAGE_COUNT, DEFAULT_SORT_DIRECTION, SortDirection } from '@project/shared';
-import { BlogPostSortBy, DEFAULT_POST_COUNT_LIMIT, DEFAULT_POST_PUBLICATION_STATUS, DEFAULT_POST_SORT_BY } from './post.constant';
+import { BlogPostSortBy, DEFAULT_POST_COUNT_LIMIT, DEFAULT_POST_SORT_BY } from './post.constant';
 import { ApiProperty } from '@nestjs/swagger';
 import { PostTypeUUID } from '../post-type/post-type.constant';
 
-export class BlogPostQuery {
+export class FeedQuery {
 	@ApiProperty({
 		name: 'limit',
 		description: 'Post count limit',
@@ -79,27 +79,4 @@ export class BlogPostQuery {
 	@IsEnum(PostTypeUUID)
 	@IsOptional()
 	public postType?: string;
-
-	@ApiProperty({
-		name: 'userId',
-		description: `Find posts by this user`,
-		type: 'string',
-		required: false
-	})
-	@IsOptional()
-	@IsMongoId()
-	public userId?: string;
-
-
-	@ApiProperty({
-		name: 'isPublished',
-		description: 'Publication status of posts (true = published, false = draft)',
-		type: 'boolean',
-		default: DEFAULT_POST_PUBLICATION_STATUS,
-		required: false
-	})
-	@IsOptional()
-	@IsBoolean()
-	@Transform(({ value }) => value === 'true')
-	public isPublished?: boolean = DEFAULT_POST_PUBLICATION_STATUS;
 }

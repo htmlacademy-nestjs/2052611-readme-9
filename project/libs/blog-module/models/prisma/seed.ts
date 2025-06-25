@@ -119,6 +119,15 @@ function getLikes() {
 	]
 }
 
+function getFollowers() {
+	return [
+		{
+			userId: FIRST_USER_UUID,
+			followingUserId: SECOND_USER_UUID
+		}
+	]
+}
+
 async function seedDb(prismaClient: PrismaClient) {
 	const mockPostTypes = getPostTypes();
 	for (const el of mockPostTypes) {
@@ -205,6 +214,23 @@ async function seedDb(prismaClient: PrismaClient) {
 			create: {
 				postId: el.postId,
 				userId: el.userId
+			}
+		});
+	}
+
+	const mockFollowers = getFollowers();
+	for (const el of mockFollowers) {
+		await prismaClient.follower.upsert({
+			where: {
+				userId_followingUserId: {
+					userId: el.userId,
+					followingUserId: el.followingUserId
+				}
+			},
+			update: {},
+			create: {
+				userId: el.userId,
+				followingUserId: el.followingUserId
 			}
 		});
 	}

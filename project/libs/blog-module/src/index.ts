@@ -3,6 +3,7 @@ export { PostTypeModule } from './lib/post-type/post-type.module';
 export { LikeModule } from './lib/like/like.module';
 export { CommentModule } from './lib/comment/comment.module';
 export { TagModule } from './lib/tag/tag.module';
+export { FeedQuery } from './lib/post/feed.query';
 export { BlogPostQuery } from './lib/post/post.query';
 export { CommentQuery } from './lib/comment/comment.query';
 export { CreatePostDto } from './dto/create-post.dto';

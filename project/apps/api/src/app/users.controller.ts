@@ -1,10 +1,12 @@
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Get, Param, Post, Req, UseFilters } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req, UseFilters, UseGuards } from '@nestjs/common';
 import { CreateUserDto, LoggedUserRdo, LoginUserDto } from '@project/user-module';
 import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 import { MongoIdValidationPipe } from '@project/shared';
+import { CheckAuthGuard } from './guards/check-auth.guard';
+import { FeedQuery } from '@project/blog-module';
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
@@ -59,5 +61,27 @@ export class UsersController {
 			...userData.data,
 			...postsData.data
 		};
+	}
+
+	@ApiBearerAuth('authorizationToken')
+	@ApiOperation({
+		summary: "Follow/unfollow another user"
+	})
+	@UseGuards(CheckAuthGuard)
+	@Post(':id/follow')
+	public async addOrRemoveFollower(@Param('id') id: string, @Query('followingUserId') followingUserId: string) {
+		const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Blog}/users/${id}/follow`, null, { params: { followingUserId: followingUserId } });
+		return data;
+	}
+
+	@ApiBearerAuth('authorizationToken')
+	@ApiOperation({
+		summary: "Get user's feed of posts and posts of users they follow"
+	})
+	@UseGuards(CheckAuthGuard)
+	@Get(':id/feed')
+	public async getFeed(@Param('id') id: string, @Query() query: FeedQuery) {
+		const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.Blog}/users/${id}/feed`, { params: { ...query } });
+		return data;
 	}
 }

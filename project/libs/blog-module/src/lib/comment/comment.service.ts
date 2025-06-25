@@ -4,7 +4,8 @@ import { CommentEntity } from "./comment.entity";
 import { CommentRepository } from "./comment.repository";
 import { DeleteByUserDto } from "../../dto/delete-by-user.dto";
 import { CommentQuery } from "./comment.query";
-import { PaginationResult } from "@project/shared";
+import { fillDto } from "@project/shared";
+import { CommentWithPaginationRdo } from "../../rdo/comment-with-pagination.rdo";
 
 @Injectable()
 export class CommentService {
@@ -34,8 +35,13 @@ export class CommentService {
 		}
 	}
 
-	public async findByPost(postId: string, query?: CommentQuery): Promise<PaginationResult<CommentEntity>> {
-		return await this.repository.findByPostId(postId, query);
+	public async findByPost(postId: string, query?: CommentQuery): Promise<CommentWithPaginationRdo> {
+		const commentsWithPagination = await this.repository.findByPostId(postId, query);
+		const result = {
+			...commentsWithPagination,
+			entities: commentsWithPagination.entities.map((el) => el.toPOJO()),
+		}
+		return fillDto(CommentWithPaginationRdo, result);
 	}
 
 	public async countByPostId(postId: string): Promise<number> {
