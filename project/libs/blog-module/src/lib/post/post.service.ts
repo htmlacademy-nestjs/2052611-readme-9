@@ -2,7 +2,6 @@ import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/commo
 import { CreatePostDto } from "../../dto/create-post.dto";
 import { BlogPostEntity } from "./post.entity";
 import { BlogPostRepository } from "./post.repository";
-import { PostTypeUUID } from '../post-type/post-type.constant';
 import { BlogPostQuery } from "./post.query";
 import { fillDto, PaginationResult } from "@project/shared";
 import { UpdatePostDto } from "../../dto/update-post.dto";
@@ -15,6 +14,9 @@ import { PostTypeRdo } from "../../rdo/post-type.rdo";
 import { OriginalPostRdo } from "../../rdo/original-post.rdo";
 import { RepostRdo } from "../../rdo/repost.rdo";
 import { TagRdo } from "../../rdo/tag.rdo";
+import { PostWithPaginationRdo } from "../../rdo/post-with-pagination.rdo";
+import { BlogPostRdo } from "../../rdo/post.rdo";
+import { FeedQuery } from "./feed.query";
 
 @Injectable()
 export class BlogPostService {
@@ -45,10 +47,33 @@ export class BlogPostService {
 		}
 	}
 
-	public async create(dto: CreatePostDto): Promise<BlogPostEntity> {
+	public async getPostsWithPagination(postsWithPagination: PaginationResult<BlogPostEntity>): Promise<PostWithPaginationRdo> {
+		const entities = postsWithPagination.entities;
+		const posts = [];
+		for (let item of entities) {
+			const info = await this.addPostInfo(item);
+			posts.push({
+				...item.toPOJO(),
+				...info
+			});
+		}
+		const result = {
+			...postsWithPagination,
+			entities: posts
+		}
+		return fillDto(PostWithPaginationRdo, result);
+	}
+
+	public async create(dto: CreatePostDto): Promise<BlogPostRdo> {
 		const newEntity = new BlogPostEntity(dto);
 		await this.repository.save(newEntity);
-		return newEntity;
+		await this.tagService.savePostTags(dto.tags, newEntity.id);
+
+		const info = await this.addPostInfo(newEntity);
+		return fillDto(BlogPostRdo, {
+			...newEntity.toPOJO(),
+			...info
+		});
 	}
 
 	public async delete(id: string, dto: DeleteByUserDto) {
@@ -63,7 +88,7 @@ export class BlogPostService {
 		}
 	}
 
-	public async update(id: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
+	public async update(id: string, dto: UpdatePostDto): Promise<BlogPostRdo> {
 		const existingPost = await this.repository.findById(id);
 		let hasChanges = false;
 
@@ -78,11 +103,12 @@ export class BlogPostService {
 			}
 		}
 
-		if (!hasChanges) {
-			return existingPost;
+		if (hasChanges) {
+			await this.repository.update(existingPost);
 		}
-		await this.repository.update(existingPost);
-		return existingPost;
+
+		const tagEntities = await this.tagService.findByPost(id);
+		return fillDto(BlogPostRdo, { ...existingPost.toPOJO(), tags: tagEntities.map(el => el.toPOJO()) });
 	}
 
 	public async findById(id: string): Promise<BlogPostEntity> {
@@ -94,8 +120,31 @@ export class BlogPostService {
 		}
 	}
 
-	public async find(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
-		return await this.repository.find(query);
+	public async get(id: string): Promise<BlogPostRdo> {
+		const record = await this.findById(id);
+		const info = await this.addPostInfo(record);
+		return fillDto(BlogPostRdo, {
+			...record.toPOJO(),
+			...info
+		});
+	}
+
+	public async find(query?: BlogPostQuery): Promise<PostWithPaginationRdo> {
+		const postsWithPagination = await this.repository.find(query);
+		const entities = postsWithPagination.entities;
+		const posts = [];
+		for (let item of entities) {
+			const info = await this.addPostInfo(item);
+			posts.push({
+				...item.toPOJO(),
+				...info
+			});
+		}
+		const result = {
+			...postsWithPagination,
+			entities: posts
+		}
+		return fillDto(PostWithPaginationRdo, result);
 	}
 
 	public async repostsByPostId(postId: string): Promise<BlogPostEntity[]> {
@@ -104,5 +153,14 @@ export class BlogPostService {
 
 	public async countByUserId(userId: string): Promise<number> {
 		return await this.repository.countByUserId(userId);
+	}
+
+	public async addOrRemoveFollower(userId: string, followingUserId: string) {
+		await this.repository.addOrRemoveFollower(userId, followingUserId);
+	}
+
+	public async getFeed(userId: string, query?: FeedQuery): Promise<PostWithPaginationRdo> {
+		const postsWithPagination = await this.repository.getFeed(userId, query);
+		return await this.getPostsWithPagination(postsWithPagination);
 	}
 }

@@ -45,11 +45,6 @@ export class CommentController {
 	})
 	@Get('posts/:postId/comments')
 	public async findByPost(@Param('postId') postId: string, @Query() query: CommentQuery) {
-		const commentsWithPagination = await this.service.findByPost(postId, query);
-		const result = {
-			...commentsWithPagination,
-			entities: commentsWithPagination.entities.map((el) => el.toPOJO()),
-		}
-		return fillDto(CommentWithPaginationRdo, result);
+		return await this.service.findByPost(postId, query);
 	}
 }

@@ -84,3 +84,11 @@ model Like {
   @@id([postId, userId])
   @@map("likes")
 }
+
+model Follower {
+  userId          String @map("user_id")
+  followingUserId String @map("following_user_id")
+
+  @@id([userId, followingUserId])
+  @@map("followers")
+}

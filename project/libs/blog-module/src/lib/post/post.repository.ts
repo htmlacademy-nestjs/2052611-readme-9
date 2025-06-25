@@ -6,6 +6,7 @@ import { BlogPost } from "./post.interface";
 import { Prisma } from '@prisma/client';
 import { BlogPostQuery } from "./post.query";
 import { BlogPostSortBy, DEFAULT_POST_PUBLICATION_STATUS, DEFAULT_POST_SORT_BY } from "./post.constant";
+import { FeedQuery } from "./feed.query";
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, BlogPost> {
@@ -167,5 +168,99 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, B
 
 	public async countByUserId(userId: string): Promise<number> {
 		return await this.client.post.count({ where: { userId } });
+	}
+
+	public async addOrRemoveFollower(userId: string, followingUserId: string) {
+		const record = await this.client.follower.findFirst({
+			where: {
+				userId,
+				followingUserId
+			}
+		});
+		if (record) {
+			await this.client.follower.delete({
+				where: {
+					userId_followingUserId: {
+						userId,
+						followingUserId
+					}
+				}
+			});
+		} else {
+			await this.client.follower.create({
+				data: {
+					userId,
+					followingUserId
+				}
+			});
+		}
+	}
+
+	public async getFeed(userId: string, query?: FeedQuery): Promise<PaginationResult<BlogPostEntity>> {
+		const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+		const take = query?.limit;
+		const orderBy: Prisma.PostOrderByWithRelationInput = {};
+		const sortBy = query?.sortBy || DEFAULT_POST_SORT_BY;
+		const sortDirection = query?.sortDirection || DEFAULT_SORT_DIRECTION;
+		const followindUsers = await this.client.follower.findMany({
+			where: {
+				userId
+			}
+		});
+		let usersIds = followindUsers.map(el => el.followingUserId);
+		usersIds.push(userId);
+		let where: Prisma.PostWhereInput = {
+			userId: { in: usersIds }
+		};
+
+		if (sortBy === BlogPostSortBy.Date) {
+			orderBy.createdAt = sortDirection;
+		} else if (sortBy === BlogPostSortBy.Comments) {
+			orderBy.Comment = {
+				_count: sortDirection
+			}
+		} else if (sortBy === BlogPostSortBy.Likes) {
+			orderBy.Like = {
+				_count: sortDirection
+			}
+		}
+
+		if (query?.tag) {
+			const postsWithTag = await this.client.postTags.findMany({
+				where: {
+					tagId: query.tag
+				}
+			});
+			if (postsWithTag.length > 0) {
+				where.id = { in: postsWithTag.map(el => el.postId) };
+			};
+		}
+
+		if (query?.postType) {
+			where.typeId = query.postType;
+		}
+
+		const [records, postCount] = await Promise.all([
+			this.client.post.findMany({
+				where, skip, take, orderBy,
+				include: {
+					_count: {
+						select: {
+							Like: true,
+							Comment: true
+						}
+					}
+				}
+			}),
+			this.getPostCount(where),
+		]);
+
+		return {
+			entities: records.map((record) => this.createEntityFromDocument(record)),
+			currentPage: query?.page,
+			totalPages: this.calculatePostsPage(postCount, take),
+			itemsPerPage: take,
+			totalItems: postCount,
+		}
 	}
 }
